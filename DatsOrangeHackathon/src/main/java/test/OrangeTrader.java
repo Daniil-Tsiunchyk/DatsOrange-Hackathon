@@ -59,24 +59,29 @@ public class OrangeTrader {
         ResponseEntity<Map[]> response = checkSellStock();
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            for (Map stock : Objects.requireNonNull(response.getBody())) {
+            for (Map sellStock : Objects.requireNonNull(response.getBody())) {
 
-                Integer symbolId = (Integer) stock.get("id");
-                Integer stockPrice = (Integer) stock.get("price");
+                Integer companyId = (Integer) sellStock.get("id");
+                Map<String, Integer>[] bids = (Map<String, Integer>[]) sellStock.get("bids");
 
-                for (int i = 0; i < buyPrices.size(); i++) {
-                    long boughtPrice = buyPrices.get(i);
 
-                    if (stockPrice > boughtPrice) {
-//                        placeSellOrder(stockPrice, 1);  // 1 quantity, adjust as needed
-                        cancelOrder(buyOrderIds.get(i));
-
-                        buyPrices.remove(i);
-                        buyOrderIds.remove(i);
-                        i--;  // adjust index due to removal
-                        activeBids--;
-                    }
+                for (Map<String, Integer> bid : bids) {
+                    bid.get("price");
                 }
+
+//                for (int i = 0; i < buyPrices.size(); i++) {
+//                    int boughtPrice = buyPrices.get(i);
+//
+//                    if (stockPrice > boughtPrice) {
+//                        placeSellOrder(stockPrice, 1);  // 1 quantity, adjust as needed
+//                        cancelOrder(buyOrderIds.get(i));
+//
+//                        buyPrices.remove(i);
+//                        buyOrderIds.remove(i);
+//                        i--;  // adjust index due to removal
+//                        activeBids--;
+//                    }
+//                }
             }
         }
 
