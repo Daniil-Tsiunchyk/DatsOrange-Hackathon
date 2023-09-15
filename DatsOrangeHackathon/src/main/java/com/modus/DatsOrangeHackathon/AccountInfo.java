@@ -1,4 +1,4 @@
-package test;
+package com.modus.DatsOrangeHackathon;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;

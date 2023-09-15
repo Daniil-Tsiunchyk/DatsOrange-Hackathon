@@ -1,12 +1,12 @@
-package test;
+package com.modus.DatsOrangeHackathon;
 
 import com.google.gson.Gson;
 
-import static test.OrangeTrader.displayOrangesQuantity;
+import static com.modus.DatsOrangeHackathon.OrangeTraderService.displayOrangesQuantity;
 
 public class Main {
     public static void main(String[] args) {
-        OrangeTrader orangeTrader = new OrangeTrader();
+        OrangeTraderService orangeTrader = new OrangeTraderService();
         String json = orangeTrader.getAccountInfoJson();
 
         Gson gson = new Gson();

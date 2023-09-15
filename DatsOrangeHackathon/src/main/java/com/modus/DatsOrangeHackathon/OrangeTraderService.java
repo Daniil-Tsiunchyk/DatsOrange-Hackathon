@@ -1,4 +1,4 @@
-package test;
+package com.modus.DatsOrangeHackathon;
 
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import java.util.*;
 
 
 @Service
-public class OrangeTrader {
+public class OrangeTraderService {
 
     private final String token = "64f38d2665df964f38d2665dfd";
     private final RestTemplate restTemplate = new RestTemplate();

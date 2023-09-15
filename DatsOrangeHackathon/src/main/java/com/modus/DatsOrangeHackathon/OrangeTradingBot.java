@@ -1,4 +1,4 @@
-package test;
+package com.modus.DatsOrangeHackathon;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class OrangeTradingBot {
 
     @Autowired
-    private OrangeTrader orangeTrader;
+    private OrangeTraderService orangeTrader;
 
     // Карта для хранения информации о покупках
     private final Map<Integer, Long> boughtAssets = new HashMap<>();
