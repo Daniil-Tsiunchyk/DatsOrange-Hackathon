@@ -10,13 +10,13 @@ import java.util.*;
 @Service
 public class OrangeTrader {
 
-    private String token = "64f38d2665df964f38d2665dfd";
-    private RestTemplate restTemplate = new RestTemplate();
+    private final String token = "64f38d2665df964f38d2665dfd";
+    private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "https://datsorange.devteam.games";
-    private long symbolId = 2; // ID апельсинов
+    private final long symbolId = 2; // ID апельсинов
 
-    private List<Long> buyOrderIds = new ArrayList<>();
-    private List<Long> buyPrices = new ArrayList<>();
+    private final List<Long> buyOrderIds = new ArrayList<>();
+    private final List<Long> buyPrices = new ArrayList<>();
     private int activeBids = 0;
 
     public void placeBuyOrder(long price, int quantity) {
@@ -36,7 +36,7 @@ public class OrangeTrader {
         ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            Long buyOrderId = (Long) response.getBody().get("bidId");
+            Long buyOrderId = (Long) Objects.requireNonNull(response.getBody()).get("bidId");
             buyOrderIds.add(buyOrderId);
             buyPrices.add(price);
             activeBids++;
@@ -54,7 +54,7 @@ public class OrangeTrader {
         ResponseEntity<Map[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map[].class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            for (Map stock : response.getBody()) {
+            for (Map stock : Objects.requireNonNull(response.getBody())) {
                 long stockPrice = (Long) stock.get("price");
 
                 for (int i = 0; i < buyPrices.size(); i++) {
