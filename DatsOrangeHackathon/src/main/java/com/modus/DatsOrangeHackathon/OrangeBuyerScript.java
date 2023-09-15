@@ -2,7 +2,10 @@ package com.modus.DatsOrangeHackathon;
 
 import lombok.Getter;
 import lombok.Setter;
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,11 +15,9 @@ import static com.modus.DatsOrangeHackathon.Const.*;
 
 public class OrangeBuyerScript {
 
-
     public static void main(String[] args) throws IOException, InterruptedException {
         while (true) {
             System.out.println("Starting the OrangeBuyerScript.");
-            System.out.println("Starting to analyze and buy oranges.");
             List<SellOrder> sellOrders = getSellOrders();
             System.out.println("Received " + sellOrders.size() + " sell orders.");
 
@@ -60,36 +61,6 @@ public class OrangeBuyerScript {
         private int quantity;
     }
 
-    public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException {
-
-        String jsonBody = gson.toJson(new BuyOrderRequest(symbolId, price, quantity));
-
-        RequestBody body = RequestBody.create(
-                MediaType.parse("application/json"), jsonBody);
-
-        Request request = new Request.Builder()
-                .url("https://datsorange.devteam.games/LimitPriceBuy")
-                .addHeader("token", TOKEN)
-                .post(body)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                System.out.println("Buy order placed successfully for assetId " + symbolId);
-            } else {
-                System.out.println("Failed to place buy order for assetId " + symbolId);
-                System.out.println("Response code: " + response.code());
-                System.out.println("Response message: " + response.message());
-                if (response.body() != null) {
-                    System.out.println("Response body: " + response.body().string());
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        Thread.sleep(1000);
-    }
 
     @Getter
     @Setter
@@ -106,11 +77,11 @@ public class OrangeBuyerScript {
         private List<Bid> bids;
     }
 
-    public static List<SellOrder> getSellOrders() throws IOException {
-        List<SellOrder> sellOrders = new ArrayList<>();
+    public static List<OrangeBuyerScript.SellOrder> getSellOrders() throws IOException {
+        List<OrangeBuyerScript.SellOrder> sellOrders = new ArrayList<>();
 
         Request request = new Request.Builder()
-                .url("https://datsorange.devteam.games/sellStock")
+                .url(baseUrl + "/sellStock")
                 .addHeader("token", TOKEN)
                 .get()
                 .build();
@@ -119,10 +90,10 @@ public class OrangeBuyerScript {
             if (response.isSuccessful()) {
                 assert response.body() != null;
                 String responseBody = response.body().string();
-                Stock[] stocks = gson.fromJson(responseBody, Stock[].class);
-                for (Stock stock : stocks) {
-                    for (Bid bid : stock.getBids()) {
-                        SellOrder sellOrder = new SellOrder();
+                OrangeBuyerScript.Stock[] stocks = gson.fromJson(responseBody, OrangeBuyerScript.Stock[].class);
+                for (OrangeBuyerScript.Stock stock : stocks) {
+                    for (OrangeBuyerScript.Bid bid : stock.getBids()) {
+                        OrangeBuyerScript.SellOrder sellOrder = new OrangeBuyerScript.SellOrder();
                         sellOrder.setSymbolId(stock.getId());
                         sellOrder.setPrice((int) bid.getPrice());
                         sellOrder.setQuantity(bid.getQuantity());
@@ -130,12 +101,37 @@ public class OrangeBuyerScript {
                     }
                 }
             } else {
-                System.out.println("Failed to get sell orders.");
-                System.out.println("Response code: " + response.code());
-                System.out.println("Response message: " + response.message());
+                System.out.println("Failed to get sell orders." + "Response code: " + response.code());
             }
         }
 
         return sellOrders;
+    }
+
+    public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException, IOException {
+
+        String jsonBody = gson.toJson(new OrangeBuyerScript.BuyOrderRequest(symbolId, price, quantity));
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonBody);
+
+        Request request = new Request.Builder()
+                .url("https://datsorange.devteam.games/LimitPriceBuy")
+                .addHeader("token", TOKEN)
+                .post(body)
+                .build();
+
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            System.out.println("Buy order placed successfully for assetId " + symbolId);
+        } else {
+            System.out.println("Failed to place buy order for assetId " + symbolId);
+            System.out.println("Response code: " + response.code());
+            System.out.println("Response message: " + response.message());
+            if (response.body() != null) {
+                System.out.println("Response body: " + response.body().string());
+            }
+        }
+
+        Thread.sleep(1000);
     }
 }
