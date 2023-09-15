@@ -54,7 +54,7 @@ public class OrangeBuyerScript {
 
     public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException {
         if (price >= 100) {
-            System.out.println("Skipping assetId " + symbolId + " as price is " + price);
+//            System.out.println("Skipping assetId " + symbolId + " as price is " + price);
             return;
         }
 
@@ -142,11 +142,11 @@ public class OrangeBuyerScript {
         System.out.println("Received " + sellOrders.size() + " sell orders.");
 
         for (SellOrder order : sellOrders) {
-            if (order.getPrice() < 50) {
+            if (order.getPrice() <= 100) {
                 System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
                 placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
             } else {
-                System.out.println("Skipping assetId " + order.getSymbolId() + " as price is " + order.getPrice());
+//                System.out.println("Skipping assetId " + order.getSymbolId() + " as price is " + order.getPrice());
             }
         }
         System.out.println("Finished analyzing and buying oranges.");

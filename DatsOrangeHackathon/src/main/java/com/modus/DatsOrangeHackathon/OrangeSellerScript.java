@@ -2,12 +2,13 @@ package com.modus.DatsOrangeHackathon;
 
 import com.google.gson.Gson;
 import okhttp3.*;
+import okhttp3.MediaType;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static com.modus.DatsOrangeHackathon.OrangeTraderService.displayOrangesQuantity;
 
 public class OrangeSellerScript {
     public static final String TOKEN = "64f38d2665df964f38d2665dfd";
@@ -15,8 +16,7 @@ public class OrangeSellerScript {
     public static final Gson gson = new Gson();
 
     public static void main(String[] args) {
-        OrangeTraderService orangeTrader = new OrangeTraderService();
-        String json = orangeTrader.getAccountInfoJson();
+        String json = getAccountInfoJson();
 
         Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
@@ -49,6 +49,22 @@ public class OrangeSellerScript {
             }
         }, 0, 60000);  // Запустить каждую минуту
 
+    }
+
+    public static String getAccountInfoJson() {
+        String url = baseUrl + "/info";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token", token);
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return response.getBody();
+        } else {
+            return null;
+        }
     }
 
     public static void placeSellOrder(int assetId, int price, int quantity) throws IOException, InterruptedException {
@@ -104,7 +120,6 @@ public class OrangeSellerScript {
     }
 
 
-
     public static void seeOranges(AccountInfo accountInfo, Gson gson) {
         if (accountInfo != null) {
             System.out.println("\n=================== Account Info ===================");
@@ -151,6 +166,24 @@ public class OrangeSellerScript {
             this.price = price;
             this.quantity = quantity;
         }
+    }
+
+    private static final String token = "64f38d2665df964f38d2665dfd";
+    private static final RestTemplate restTemplate = new RestTemplate();
+    private static final String baseUrl = "https://datsorange.devteam.games";
+
+    public static void displayOrangesQuantity(AccountInfo accountInfo) {
+        if (accountInfo != null && accountInfo.getAssets() != null) {
+            for (AccountInfo.Asset asset : accountInfo.getAssets()) {
+                if ("Oranges".equalsIgnoreCase(asset.getName())) {
+                    System.out.println("Asset ID: " + asset.getId());
+                    System.out.println("  Name: " + asset.getName());
+                    System.out.println("  Quantity: " + asset.getQuantity());
+                    return;
+                }
+            }
+        }
+        System.out.println("Oranges asset not found.");
     }
 
 }
