@@ -4,44 +4,45 @@ import com.google.gson.Gson;
 
 public class Main {
     public static void main(String[] args) {
-        OrangeTrader orangeTrader = new OrangeTrader(); // Создайте объект вашего сервиса
-        String json = orangeTrader.getAccountInfoJson(); // Получите JSON как строку
+        OrangeTrader orangeTrader = new OrangeTrader();
+        String json = orangeTrader.getAccountInfoJson();
 
         Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
 
-        // Далее вы можете работать с объектом `accountInfo` как обычно.
-
-        // Выводим всю информацию в консоль
         if (accountInfo != null) {
-            System.out.println("Account Info:");
+            System.out.println("\n=================== Account Info ===================");
             System.out.println("Account ID: " + accountInfo.getAccount().getId());
             System.out.println("Account Name: " + accountInfo.getAccount().getName());
 
-            System.out.println("Bids:");
+            System.out.println("\n------------------- Bids -------------------");
             for (AccountInfo.Bid bid : accountInfo.getBids()) {
                 System.out.println("Bid ID: " + bid.getId());
-                // ... и так далее для всех полей Bid
+                System.out.println("  Symbol ID: " + bid.getSymbolId());
+                System.out.println("  Price: " + bid.getPrice());
+                System.out.println("  Type: " + bid.getType());
+                System.out.println("  Create Date: " + bid.getCreateDate());
             }
 
-            System.out.println("Assets:");
+            System.out.println("\n------------------- Assets -------------------");
             for (AccountInfo.Asset asset : accountInfo.getAssets()) {
                 System.out.println("Asset ID: " + asset.getId());
-                // ... и так далее для всех полей Asset
+                System.out.println("  Name: " + asset.getName());
+                System.out.println("  Quantity: " + asset.getQuantity());
             }
 
-            System.out.println("Frozen Assets:");
+            System.out.println("\n------------------- Frozen Assets -------------------");
             for (AccountInfo.FrozenAsset frozenAsset : accountInfo.getFrozenAssets()) {
                 System.out.println("Frozen Asset ID: " + frozenAsset.getId());
-                // ... и так далее для всех полей FrozenAsset
+                System.out.println("  Name: " + frozenAsset.getName());
+                System.out.println("  Quantity: " + frozenAsset.getQuantity());
             }
+
+            System.out.println("\n====================================================");
         }
 
-        // Для красивого вывода JSON
         String prettyJson = gson.toJson(accountInfo);
         System.out.println("Pretty JSON:");
         System.out.println(prettyJson);
     }
 }
-
-
