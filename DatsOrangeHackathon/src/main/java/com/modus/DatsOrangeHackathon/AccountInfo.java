@@ -10,22 +10,14 @@ import java.util.List;
 @Setter
 public class AccountInfo {
     // Поле для хранения информации о счете
-    private Account account;
+    private int id;
+    private String name;
     // Поле для хранения списка ставок
     private List<Bid> bids;
     // Поле для хранения списка активов
     private List<Asset> assets;
     // Поле для хранения списка замороженных активов
     private List<FrozenAsset> frozenAssets;
-
-
-    // Наш счёт
-    @Setter
-    @Getter
-    public static class Account {
-        private int id;
-        private String name;
-    }
 
     // Ставки
     @Getter

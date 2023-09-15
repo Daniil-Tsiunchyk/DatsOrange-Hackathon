@@ -8,11 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.modus.DatsOrangeHackathon.Const.*;
+
 public class OrangeBuyerScript {
 
-    public static final OkHttpClient client = new OkHttpClient();
-    public static final String TOKEN = "64f38d2665df964f38d2665dfd";
-    public static final com.google.gson.Gson gson = new com.google.gson.Gson();
 
     public static void main(String[] args) {
         while (true) {
@@ -24,7 +23,7 @@ public class OrangeBuyerScript {
             }
             System.out.println("Finished the OrangeBuyerScript.");
             try {
-                Thread.sleep(5000);  // Задержка на 60 секунд (60000 миллисекунд)
+                Thread.sleep(1000);  // Задержка на 5 секунд
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -53,10 +52,6 @@ public class OrangeBuyerScript {
     }
 
     public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException {
-        if (price >= 100) {
-//            System.out.println("Skipping assetId " + symbolId + " as price is " + price);
-            return;
-        }
 
         String jsonBody = gson.toJson(new BuyOrderRequest(symbolId, price, quantity));
 
@@ -142,7 +137,7 @@ public class OrangeBuyerScript {
         System.out.println("Received " + sellOrders.size() + " sell orders.");
 
         for (SellOrder order : sellOrders) {
-            if (order.getPrice() <= 100) {
+            if (order.getPrice() <= 5) {
                 System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
                 placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
             } else {

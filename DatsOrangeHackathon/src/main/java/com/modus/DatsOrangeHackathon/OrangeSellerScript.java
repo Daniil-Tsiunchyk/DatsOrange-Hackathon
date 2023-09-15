@@ -4,16 +4,15 @@ import com.google.gson.Gson;
 import okhttp3.*;
 import okhttp3.MediaType;
 import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.modus.DatsOrangeHackathon.Const.*;
+
 public class OrangeSellerScript {
-    public static final String TOKEN = "64f38d2665df964f38d2665dfd";
-    public static final OkHttpClient client = new OkHttpClient();
-    public static final Gson gson = new Gson();
+
 
     public static void main(String[] args) {
         String json = getAccountInfoJson();
@@ -21,7 +20,7 @@ public class OrangeSellerScript {
         Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
         displayOrangesQuantity(accountInfo);
-//        seeOranges(accountInfo, gson);
+        seeOranges(accountInfo, gson);
 
 
         Timer timer = new Timer();
@@ -47,7 +46,7 @@ public class OrangeSellerScript {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 60000);  // Запустить каждую минуту
+        }, 0, 1000);  // Запустить каждую минуту
 
     }
 
@@ -123,8 +122,8 @@ public class OrangeSellerScript {
     public static void seeOranges(AccountInfo accountInfo, Gson gson) {
         if (accountInfo != null) {
             System.out.println("\n=================== Account Info ===================");
-            System.out.println("Account ID: " + accountInfo.getAccount().getId());
-            System.out.println("Account Name: " + accountInfo.getAccount().getName());
+            System.out.println("Account ID: " + accountInfo.getId());
+            System.out.println("Account Name: " + accountInfo.getName());
 
             System.out.println("\n------------------- Bids -------------------");
             for (AccountInfo.Bid bid : accountInfo.getBids()) {
@@ -157,20 +156,10 @@ public class OrangeSellerScript {
     }
 
     public static class SellOrderRequest {
-        private int symbolId;
-        private int price;
-        private int quantity;
-
         public SellOrderRequest(int symbolId, int price, int quantity) {
-            this.symbolId = symbolId;
-            this.price = price;
-            this.quantity = quantity;
         }
     }
 
-    private static final String token = "64f38d2665df964f38d2665dfd";
-    private static final RestTemplate restTemplate = new RestTemplate();
-    private static final String baseUrl = "https://datsorange.devteam.games";
 
     public static void displayOrangesQuantity(AccountInfo accountInfo) {
         if (accountInfo != null && accountInfo.getAssets() != null) {
