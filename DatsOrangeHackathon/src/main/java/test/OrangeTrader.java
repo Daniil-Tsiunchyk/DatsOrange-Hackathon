@@ -1,5 +1,6 @@
 package test;
 
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,13 +14,12 @@ public class OrangeTrader {
     private final String token = "64f38d2665df964f38d2665dfd";
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "https://datsorange.devteam.games";
-    private final long symbolId = 2; // ID апельсинов
 
-    private final List<Long> buyOrderIds = new ArrayList<>();
-    private final List<Long> buyPrices = new ArrayList<>();
+    private final List<Integer> buyOrderIds = new ArrayList<>();
+    private final List<Integer> buyPrices = new ArrayList<>();
     private int activeBids = 0;
 
-    public void placeBuyOrder(long price, int quantity) {
+    public void placeBuyOrder(int symbolId, int price, int quantity) {
         String url = baseUrl + "/LimitPriceBuy";
 
         HttpHeaders headers = new HttpHeaders();
@@ -36,7 +36,7 @@ public class OrangeTrader {
         ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
-            Long buyOrderId = (Long) Objects.requireNonNull(response.getBody()).get("bidId");
+            Integer buyOrderId = (Integer) Objects.requireNonNull(response.getBody()).get("bidId");
             buyOrderIds.add(buyOrderId);
             buyPrices.add(price);
             activeBids++;
@@ -55,7 +55,9 @@ public class OrangeTrader {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             for (Map stock : Objects.requireNonNull(response.getBody())) {
-                long stockPrice = (Long) stock.get("price");
+                Integer symbolId = (Integer)  stock.get("symbolId");
+                Integer stockPrice = (Integer) stock.get("price");
+                Integer 
 
                 for (int i = 0; i < buyPrices.size(); i++) {
                     long boughtPrice = buyPrices.get(i);
@@ -74,7 +76,7 @@ public class OrangeTrader {
         }
     }
 
-    public void placeSellOrder(long price, int quantity) {
+    public void placeSellOrder(int symbolId, int price, int quantity) {
         String url = baseUrl + "/LimitPriceSell";
 
         HttpHeaders headers = new HttpHeaders();
@@ -91,7 +93,7 @@ public class OrangeTrader {
         restTemplate.postForEntity(url, entity, Map.class);
     }
 
-    public void cancelOrder(long bidId) {
+    public void cancelOrder(int bidId) {
         String url = baseUrl + "/RemoveBid";
 
         HttpHeaders headers = new HttpHeaders();
