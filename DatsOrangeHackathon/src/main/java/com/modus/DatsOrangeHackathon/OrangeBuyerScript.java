@@ -13,17 +13,26 @@ import static com.modus.DatsOrangeHackathon.Const.*;
 public class OrangeBuyerScript {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, InterruptedException {
         while (true) {
             System.out.println("Starting the OrangeBuyerScript.");
-            try {
-                analyzeAndBuyOranges();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+            System.out.println("Starting to analyze and buy oranges.");
+            List<SellOrder> sellOrders = getSellOrders();
+            System.out.println("Received " + sellOrders.size() + " sell orders.");
+
+            for (SellOrder order : sellOrders) {
+                if (order.getPrice() <= 5) {
+                    System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
+                    placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
+                } else {
+                    System.out.println("Skipping assetId " + order.getSymbolId() + " as price is " + order.getPrice());
+                }
             }
+            System.out.println("Finished analyzing and buying oranges.");
+
             System.out.println("Finished the OrangeBuyerScript.");
             try {
-                Thread.sleep(1000);  // Задержка на 5 секунд
+                Thread.sleep(1000);  // Задержка на 1 секунду
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -128,22 +137,5 @@ public class OrangeBuyerScript {
         }
 
         return sellOrders;
-    }
-
-
-    public static void analyzeAndBuyOranges() throws IOException, InterruptedException {
-        System.out.println("Starting to analyze and buy oranges.");
-        List<SellOrder> sellOrders = getSellOrders();
-        System.out.println("Received " + sellOrders.size() + " sell orders.");
-
-        for (SellOrder order : sellOrders) {
-            if (order.getPrice() <= 5) {
-                System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
-                placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
-            } else {
-//                System.out.println("Skipping assetId " + order.getSymbolId() + " as price is " + order.getPrice());
-            }
-        }
-        System.out.println("Finished analyzing and buying oranges.");
     }
 }

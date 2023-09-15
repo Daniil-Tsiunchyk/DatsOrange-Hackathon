@@ -13,11 +13,9 @@ import static com.modus.DatsOrangeHackathon.Const.*;
 
 public class OrangeSellerScript {
 
-
     public static void main(String[] args) {
         String json = getAccountInfoJson();
 
-        Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
         displayOrangesQuantity(accountInfo);
         seeOranges(accountInfo, gson);
@@ -32,12 +30,9 @@ public class OrangeSellerScript {
                     AccountInfo accountInfo = getAccountInfo();
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                            // Выставляем каждую акцию на продажу за 1000
-                            if (asset.getId() == 73 || asset.getId() == 31) {
-                                placeSellOrder(asset.getId(), 1000, asset.getQuantity());
-                            } else {
-                                placeSellOrder(asset.getId(), 500, asset.getQuantity());
-                            }
+                            if (asset.getQuantity() != 0)
+                                // Выставляем каждую акцию на продажу за 1000
+                                placeSellOrder(asset.getId(), orderPrice, asset.getQuantity());
                         }
                     }
                 } catch (IOException e) {
@@ -53,7 +48,7 @@ public class OrangeSellerScript {
     public static String getAccountInfoJson() {
         String url = baseUrl + "/info";
         HttpHeaders headers = new HttpHeaders();
-        headers.set("token", token);
+        headers.set("token", TOKEN);
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
@@ -66,7 +61,7 @@ public class OrangeSellerScript {
         }
     }
 
-    public static void placeSellOrder(int assetId, int price, int quantity) throws IOException, InterruptedException {
+    public static void placeSellOrder(int assetId, long price, int quantity) throws IOException, InterruptedException {
         if (quantity <= 0) {
             System.out.println("Cannot place sell order for assetId " + assetId + ". Quantity should be greater than 0.");
             return;
@@ -156,7 +151,7 @@ public class OrangeSellerScript {
     }
 
     public static class SellOrderRequest {
-        public SellOrderRequest(int symbolId, int price, int quantity) {
+        public SellOrderRequest(int symbolId, long price, int quantity) {
         }
     }
 
