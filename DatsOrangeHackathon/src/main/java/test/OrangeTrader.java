@@ -75,7 +75,7 @@ public class OrangeTrader {
                     long boughtPrice = buyPrices.get(i);
 
                     if (stockPrice > boughtPrice) {
-                        placeSellOrder(stockPrice, 1);  // 1 quantity, adjust as needed
+//                        placeSellOrder(stockPrice, 1);  // 1 quantity, adjust as needed
                         cancelOrder(buyOrderIds.get(i));
 
                         buyPrices.remove(i);
@@ -154,4 +154,20 @@ public class OrangeTrader {
     public void sell(int assetId, long price) {
         placeSellOrder(assetId, (int) price, 1);  // Количество можно настроить
     }
+    public String getAccountInfoJson() {
+        String url = baseUrl + "/info";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token", token);
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return response.getBody();
+        } else {
+            return null;
+        }
+    }
+
 }
