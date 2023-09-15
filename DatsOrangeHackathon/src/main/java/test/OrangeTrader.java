@@ -43,7 +43,7 @@ public class OrangeTrader {
     }
 
     // получает все заявки на продажу акций
-    public ResponseEntity<Map[]> checkSellStock(){
+    public ResponseEntity<Map[]> checkSellStock() {
         String url = baseUrl + "/sellStock";
 
         HttpHeaders headers = new HttpHeaders();
@@ -56,12 +56,12 @@ public class OrangeTrader {
 
     // получает все заявки на продажу и ищет лучшее предложение
     public void checkAndSell() {
-        ResponseEntity<Map[]> response =  checkSellStock();
+        ResponseEntity<Map[]> response = checkSellStock();
 
         if (response.getStatusCode() == HttpStatus.OK) {
             for (Map stock : Objects.requireNonNull(response.getBody())) {
 
-                Integer symbolId = (Integer)  stock.get("id");
+                Integer symbolId = (Integer) stock.get("id");
                 Integer stockPrice = (Integer) stock.get("price");
 
                 for (int i = 0; i < buyPrices.size(); i++) {
@@ -79,6 +79,8 @@ public class OrangeTrader {
                 }
             }
         }
+
+
     }
 
     public void placeSellOrder(int symbolId, int price, int quantity) {
@@ -112,6 +114,7 @@ public class OrangeTrader {
 
         restTemplate.postForEntity(url, entity, Map.class);
     }
+
     public AccountInfo getAccountInfo() {
         String url = baseUrl + "/info";  // Замените на ваш API endpoint для получения информации о аккаунте
 
@@ -129,6 +132,19 @@ public class OrangeTrader {
         }
     }
 
+    public static void displayOrangesQuantity(AccountInfo accountInfo) {
+        if (accountInfo != null && accountInfo.getAssets() != null) {
+            for (AccountInfo.Asset asset : accountInfo.getAssets()) {
+                if ("Oranges".equalsIgnoreCase(asset.getName())) {
+                    System.out.println("Asset ID: " + asset.getId());
+                    System.out.println("  Name: " + asset.getName());
+                    System.out.println("  Quantity: " + asset.getQuantity());
+                    return;
+                }
+            }
+        }
+        System.out.println("Oranges asset not found.");
+    }
 
     public Map<Integer, Long> getSellOffers() {
         // TODO: реализовать метод
@@ -147,6 +163,7 @@ public class OrangeTrader {
     public void sell(int assetId, long price) {
         placeSellOrder(assetId, (int) price, 1);  // Количество можно настроить
     }
+
     public String getAccountInfoJson() {
         String url = baseUrl + "/info";
         HttpHeaders headers = new HttpHeaders();

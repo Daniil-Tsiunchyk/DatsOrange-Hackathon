@@ -2,6 +2,8 @@ package test;
 
 import com.google.gson.Gson;
 
+import static test.OrangeTrader.displayOrangesQuantity;
+
 public class Main {
     public static void main(String[] args) {
         OrangeTrader orangeTrader = new OrangeTrader();
@@ -9,7 +11,13 @@ public class Main {
 
         Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
+        displayOrangesQuantity(accountInfo);
 
+//        seeOranges(accountInfo, gson);
+
+    }
+
+    public static void seeOranges(AccountInfo accountInfo, Gson gson) {
         if (accountInfo != null) {
             System.out.println("\n=================== Account Info ===================");
             System.out.println("Account ID: " + accountInfo.getAccount().getId());
@@ -44,5 +52,6 @@ public class Main {
         String prettyJson = gson.toJson(accountInfo);
         System.out.println("Pretty JSON:");
         System.out.println(prettyJson);
+        return;
     }
 }
