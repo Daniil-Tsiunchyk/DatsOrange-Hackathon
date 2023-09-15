@@ -17,29 +17,26 @@ public class OrangeBuyerScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         while (true) {
-            System.out.println("Starting the OrangeBuyerScript.");
+            System.out.println("Запуск скрипта OrangeBuyerScript.");
             List<SellOrder> sellOrders = getSellOrders();
-            System.out.println("Received " + sellOrders.size() + " sell orders.");
+            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
 
             for (SellOrder order : sellOrders) {
                 if (order.getPrice() <= 5) {
-                    System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
+                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId());
                     placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
                 } else {
-                    System.out.println("Skipping assetId " + order.getSymbolId() + " as price is " + order.getPrice());
+                    System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice());
                 }
             }
-            System.out.println("Finished analyzing and buying oranges.");
-
-            System.out.println("Finished the OrangeBuyerScript.");
+            System.out.println("Скрипт OrangeBuyerScript завершён.");
             try {
-                Thread.sleep(1000);  // Задержка на 1 секунду
+                Thread.sleep(100);  // Задержка в 1 секунду будет 1000
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     public static class BuyOrderRequest {
         int symbolId;
@@ -101,7 +98,7 @@ public class OrangeBuyerScript {
                     }
                 }
             } else {
-                System.out.println("Failed to get sell orders." + "Response code: " + response.code());
+                System.out.println("Не удалось получить ордеры на продажу. Код ответа: " + response.code());
             }
         }
 
@@ -122,13 +119,13 @@ public class OrangeBuyerScript {
 
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
-            System.out.println("Buy order placed successfully for assetId " + symbolId);
+            System.out.println("Ордер на покупку успешно размещен для assetId " + symbolId);
         } else {
-            System.out.println("Failed to place buy order for assetId " + symbolId);
-            System.out.println("Response code: " + response.code());
-            System.out.println("Response message: " + response.message());
+            System.out.println("Не удалось разместить ордер на покупку для assetId " + symbolId);
+            System.out.println("Код ответа: " + response.code());
+            System.out.println("Сообщение ответа: " + response.message());
             if (response.body() != null) {
-                System.out.println("Response body: " + response.body().string());
+                System.out.println("Тело ответа: " + response.body().string());
             }
         }
 

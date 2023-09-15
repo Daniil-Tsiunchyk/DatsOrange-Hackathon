@@ -52,34 +52,33 @@ public class InfoScript {
         return null;
     }
 
-
     public static void seeOranges(AccountInfo accountInfo, Gson gson) {
         if (accountInfo != null) {
-            System.out.println("\n=================== Account Info ===================");
-            System.out.println("Account ID: " + accountInfo.getId());
-            System.out.println("Account Name: " + accountInfo.getName());
+            System.out.println("\n=================== Информация об аккаунте ===================");
+            System.out.println("ID аккаунта: " + accountInfo.getId());
+            System.out.println("Имя аккаунта: " + accountInfo.getName());
 
-            System.out.println("\n------------------- Bids -------------------");
+            System.out.println("\n------------------- Ордеры -------------------");
             for (AccountInfo.Bid bid : accountInfo.getBids()) {
-                System.out.println("Bid ID: " + bid.getId());
-                System.out.println("  Symbol ID: " + bid.getSymbolId());
-                System.out.println("  Price: " + bid.getPrice());
-                System.out.println("  Type: " + bid.getType());
-                System.out.println("  Create Date: " + bid.getCreateDate());
+                System.out.println("ID ордера: " + bid.getId());
+                System.out.println("  ID актива: " + bid.getSymbolId());
+                System.out.println("  Цена: " + bid.getPrice());
+                System.out.println("  Тип: " + bid.getType());
+                System.out.println("  Дата создания: " + bid.getCreateDate());
             }
 
-            System.out.println("\n------------------- Assets -------------------");
+            System.out.println("\n------------------- Активы -------------------");
             for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                System.out.println("Asset ID: " + asset.getId());
-                System.out.println("  Name: " + asset.getName());
-                System.out.println("  Quantity: " + asset.getQuantity());
+                System.out.println("ID актива: " + asset.getId());
+                System.out.println("  Имя: " + asset.getName());
+                System.out.println("  Количество: " + asset.getQuantity());
             }
 
-            System.out.println("\n------------------- Frozen Assets -------------------");
+            System.out.println("\n------------------- Замороженные активы -------------------");
             for (AccountInfo.FrozenAsset frozenAsset : accountInfo.getFrozenAssets()) {
-                System.out.println("Frozen Asset ID: " + frozenAsset.getId());
-                System.out.println("  Name: " + frozenAsset.getName());
-                System.out.println("  Quantity: " + frozenAsset.getQuantity());
+                System.out.println("ID замороженного актива: " + frozenAsset.getId());
+                System.out.println("  Имя: " + frozenAsset.getName());
+                System.out.println("  Количество: " + frozenAsset.getQuantity());
             }
 
             System.out.println("\n====================================================");
