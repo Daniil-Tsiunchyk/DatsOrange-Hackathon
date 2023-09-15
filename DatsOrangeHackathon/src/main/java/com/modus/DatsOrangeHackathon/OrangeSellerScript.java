@@ -9,7 +9,7 @@ import java.util.TimerTask;
 
 import static com.modus.DatsOrangeHackathon.OrangeTraderService.displayOrangesQuantity;
 
-public class Main {
+public class OrangeSellerScript {
     public static final String TOKEN = "64f38d2665df964f38d2665dfd";
     public static final OkHttpClient client = new OkHttpClient();
     public static final Gson gson = new Gson();
@@ -95,6 +95,7 @@ public class Main {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                assert response.body() != null;
                 String jsonData = response.body().string();
                 return gson.fromJson(jsonData, AccountInfo.class);
             }
