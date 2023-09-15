@@ -9,11 +9,20 @@ import java.util.List;
 @Getter
 @Setter
 public class AccountInfo {
-    private int id;
-    private String name;
+    private Account account;
     private List<Bid> bids; // Ставки
     private List<Asset> assets; //Активы
     private List<FrozenAsset> frozenAssets; // Замороженные активы
+
+    @Getter
+    @Setter
+    public static class Account {
+        @SerializedName("id")
+        private int id;
+
+        @SerializedName("name")
+        private String name;
+    }
 
     @Getter
     @Setter

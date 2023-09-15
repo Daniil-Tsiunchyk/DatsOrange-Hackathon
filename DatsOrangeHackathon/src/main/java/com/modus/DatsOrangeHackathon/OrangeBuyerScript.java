@@ -22,11 +22,11 @@ public class OrangeBuyerScript {
             System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
 
             for (SellOrder order : sellOrders) {
-                if (order.getPrice() <= 5) {
-                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId());
+                if (order.getPrice() <= orderBuyPrice) {
+                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
                     placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
                 } else {
-                    System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice());
+                    System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
                 }
             }
             System.out.println("Скрипт OrangeBuyerScript завершён.");
@@ -36,42 +36,6 @@ public class OrangeBuyerScript {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static class BuyOrderRequest {
-        int symbolId;
-        int price;
-        int quantity;
-
-        public BuyOrderRequest(int symbolId, int price, int quantity) {
-            this.symbolId = symbolId;
-            this.price = price;
-            this.quantity = quantity;
-        }
-    }
-
-    @Getter
-    @Setter
-    public static class SellOrder {
-        private int symbolId;
-        private int price;
-        private int quantity;
-    }
-
-
-    @Getter
-    @Setter
-    public static class Bid {
-        private long price;
-        private int quantity;
-    }
-
-    @Getter
-    @Setter
-    public static class Stock {
-        private int id;
-        private String ticker;
-        private List<Bid> bids;
     }
 
     public static List<OrangeBuyerScript.SellOrder> getSellOrders() throws IOException {
@@ -130,5 +94,41 @@ public class OrangeBuyerScript {
         }
 
         Thread.sleep(1000);
+    }
+
+    public static class BuyOrderRequest {
+        int symbolId;
+        int price;
+        int quantity;
+
+        public BuyOrderRequest(int symbolId, int price, int quantity) {
+            this.symbolId = symbolId;
+            this.price = price;
+            this.quantity = quantity;
+        }
+    }
+
+    @Getter
+    @Setter
+    public static class SellOrder {
+        private int symbolId;
+        private int price;
+        private int quantity;
+    }
+
+
+    @Getter
+    @Setter
+    public static class Bid {
+        private long price;
+        private int quantity;
+    }
+
+    @Getter
+    @Setter
+    public static class Stock {
+        private int id;
+        private String ticker;
+        private List<Bid> bids;
     }
 }

@@ -18,11 +18,11 @@ public class OrangeSellerScript {
             public void run() {
                 try {
                     // Получить информацию об активах
-                    AccountInfo accountInfo = InfoScript.getAccountInfo();
+                    AccountInfo accountInfo = OrangeInfoScript.getAccountInfo();
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
                             if (asset.getQuantity() != 0)
-                                placeSellOrder(asset.getId(), orderPrice, asset.getQuantity());
+                                placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
                         }
                     }
                 } catch (IOException e) {
@@ -76,19 +76,4 @@ public class OrangeSellerScript {
         public SellOrderRequest(int symbolId, long price, int quantity) {
         }
     }
-
-    public static void displayOrangesQuantity(AccountInfo accountInfo) {
-        if (accountInfo != null && accountInfo.getAssets() != null) {
-            for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                if ("Oranges".equalsIgnoreCase(asset.getName())) {
-                    System.out.println("ID актива: " + asset.getId());
-                    System.out.println("  Название: " + asset.getName());
-                    System.out.println("  Количество: " + asset.getQuantity());
-                    return;
-                }
-            }
-        }
-        System.out.println("Актив 'Апельсины' не найден.");
-    }
-
 }
