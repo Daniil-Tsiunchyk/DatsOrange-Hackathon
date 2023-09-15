@@ -53,7 +53,7 @@ public class OrangeBuyerScript {
     }
 
     public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException {
-        if (price <= 50) {
+        if (price >= 100) {
             System.out.println("Skipping assetId " + symbolId + " as price is " + price);
             return;
         }
@@ -90,7 +90,7 @@ public class OrangeBuyerScript {
     @Getter
     @Setter
     public static class Bid {
-        private int price;
+        private long price;
         private int quantity;
     }
 
@@ -113,13 +113,14 @@ public class OrangeBuyerScript {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                assert response.body() != null;
                 String responseBody = response.body().string();
                 Stock[] stocks = gson.fromJson(responseBody, Stock[].class);
                 for (Stock stock : stocks) {
                     for (Bid bid : stock.getBids()) {
                         SellOrder sellOrder = new SellOrder();
                         sellOrder.setSymbolId(stock.getId());
-                        sellOrder.setPrice(bid.getPrice());
+                        sellOrder.setPrice((int) bid.getPrice());
                         sellOrder.setQuantity(bid.getQuantity());
                         sellOrders.add(sellOrder);
                     }
