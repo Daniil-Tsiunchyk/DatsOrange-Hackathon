@@ -15,12 +15,22 @@ public class OrangeBuyerScript {
     public static final com.google.gson.Gson gson = new com.google.gson.Gson();
 
     public static void main(String[] args) {
-        try {
-            analyzeAndBuyOranges();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        while (true) {
+            System.out.println("Starting the OrangeBuyerScript.");
+            try {
+                analyzeAndBuyOranges();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Finished the OrangeBuyerScript.");
+            try {
+                Thread.sleep(5000);  // Задержка на 60 секунд (60000 миллисекунд)
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     public static class BuyOrderRequest {
         int symbolId;
@@ -126,12 +136,18 @@ public class OrangeBuyerScript {
 
 
     public static void analyzeAndBuyOranges() throws IOException, InterruptedException {
+        System.out.println("Starting to analyze and buy oranges.");
         List<SellOrder> sellOrders = getSellOrders();
+        System.out.println("Received " + sellOrders.size() + " sell orders.");
 
         for (SellOrder order : sellOrders) {
             if (order.getPrice() < 50) {
+                System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
                 placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
+            } else {
+                System.out.println("Skipping assetId " + order.getSymbolId() + " as price is " + order.getPrice());
             }
         }
+        System.out.println("Finished analyzing and buying oranges.");
     }
 }
