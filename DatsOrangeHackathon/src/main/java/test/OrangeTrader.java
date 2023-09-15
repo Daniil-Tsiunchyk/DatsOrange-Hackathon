@@ -43,6 +43,19 @@ public class OrangeTrader {
         }
     }
 
+    // получает все заявки на продажу акций
+    public ResponseEntity<Map[]> checkSellStock(){
+        String url = baseUrl + "/sellStock";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token", token);
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, Map[].class);
+    }
+
+    // получает все заявки на продажу и ищет лучшее предложение
     public void checkAndSell() {
         String url = baseUrl + "/sellStock";
 
@@ -51,12 +64,13 @@ public class OrangeTrader {
 
         HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
 
-        ResponseEntity<Map[]> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map[].class);
+        ResponseEntity<Map[]> response =  restTemplate.exchange(url, HttpMethod.GET, entity, Map[].class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
             for (Map stock : Objects.requireNonNull(response.getBody())) {
-                int symbolId = (Integer) stock.get("symbolId"); // здесь изменили Integer на int
-                int stockPrice = (Integer) stock.get("price"); // и здесь тоже
+
+                Integer symbolId = (Integer)  stock.get("id");
+                Integer stockPrice = (Integer) stock.get("price");
 
                 for (int i = 0; i < buyPrices.size(); i++) {
                     long boughtPrice = buyPrices.get(i);
