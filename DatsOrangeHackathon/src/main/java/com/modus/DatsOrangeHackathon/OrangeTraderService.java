@@ -14,11 +14,11 @@ public class OrangeTraderService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "https://datsorange.devteam.games";
 
-    private final List<Integer> buyOrderIds = new ArrayList<>();
+    private final List<Integer> buyOrderIds = new ArrayList<>(); //
     private final List<Integer> buyPrices = new ArrayList<>();
     private int activeBids = 0;
 
-    public void placeBuyOrder(int symbolId, int price, int quantity) {
+    public void placeBuyOrder(int symbolId, int limitPrice, int quantity) {
         String url = baseUrl + "/LimitPriceBuy";
 
         HttpHeaders headers = new HttpHeaders();
@@ -27,7 +27,7 @@ public class OrangeTraderService {
 
         Map<String, Object> map = new HashMap<>();
         map.put("symbolId", symbolId);
-        map.put("price", price);
+        map.put("price", limitPrice);
         map.put("quantity", quantity);
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
@@ -37,7 +37,7 @@ public class OrangeTraderService {
         if (response.getStatusCode() == HttpStatus.OK) {
             Integer buyOrderId = (Integer) Objects.requireNonNull(response.getBody()).get("bidId");
             buyOrderIds.add(buyOrderId);
-            buyPrices.add(price);
+            buyPrices.add(limitPrice);
             activeBids++;
         }
     }
@@ -68,6 +68,8 @@ public class OrangeTraderService {
                 for (Map<String, Integer> bid : bids) {
                     Integer sellPrice = bid.get("price");
                     Integer quantity = bid.get("quantity");
+
+
                 }
 
 //                for (int i = 0; i < buyPrices.size(); i++) {
