@@ -55,9 +55,8 @@ public class OrangeTrader {
 
         if (response.getStatusCode() == HttpStatus.OK) {
             for (Map stock : Objects.requireNonNull(response.getBody())) {
-                Integer symbolId = (Integer)  stock.get("symbolId");
-                Integer stockPrice = (Integer) stock.get("price");
-                Integer 
+                int symbolId = (Integer) stock.get("symbolId"); // здесь изменили Integer на int
+                int stockPrice = (Integer) stock.get("price"); // и здесь тоже
 
                 for (int i = 0; i < buyPrices.size(); i++) {
                     long boughtPrice = buyPrices.get(i);
@@ -106,5 +105,40 @@ public class OrangeTrader {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(map, headers);
 
         restTemplate.postForEntity(url, entity, Map.class);
+    }
+    public AccountInfo getAccountInfo() {
+        String url = baseUrl + "/info";  // Замените на ваш API endpoint для получения информации о аккаунте
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("token", token);
+
+        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
+
+        ResponseEntity<AccountInfo> response = restTemplate.exchange(url, HttpMethod.GET, entity, AccountInfo.class);
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return response.getBody();
+        } else {
+            return null;  // или кидать исключение
+        }
+    }
+
+
+    public Map<Integer, Long> getSellOffers() {
+        // TODO: реализовать метод
+        return null; // временно, нужно реализовать
+    }
+
+    public Map<Integer, Long> getBuyOffers() {
+        // TODO: реализовать метод
+        return null; // временно, нужно реализовать
+    }
+
+    public void buy(int assetId, long price) {
+        placeBuyOrder(assetId, (int) price, 1);  // Количество можно настроить
+    }
+
+    public void sell(int assetId, long price) {
+        placeSellOrder(assetId, (int) price, 1);  // Количество можно настроить
     }
 }
