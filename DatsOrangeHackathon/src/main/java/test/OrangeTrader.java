@@ -1,6 +1,5 @@
 package test;
 
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
