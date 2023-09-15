@@ -19,7 +19,7 @@ public class AccountInfo {
     private List<FrozenAsset> frozenAssets;
 
 
-    // Вложенный класс для информации о счете
+    // Наш счёт
     @Setter
     @Getter
     public static class Account {
@@ -27,7 +27,7 @@ public class AccountInfo {
         private String name;
     }
 
-    // Вложенный класс для ставок (пока пустой, так как в JSON нет данных)
+    // Ставки
     @Getter
     @Setter
     public static class Bid {
@@ -44,7 +44,7 @@ public class AccountInfo {
 
     }
 
-    // Вложенный класс для активов
+    //Активы
     @Getter
     @Setter
     public static class Asset {
@@ -54,12 +54,10 @@ public class AccountInfo {
 
     }
 
-    // Вложенный класс для замороженных активов (предположительно аналогичен Asset)
+    // Замороженные активы
     @Getter
     @Setter
     public static class FrozenAsset {
-        // Так как структура предположительно аналогична Asset,
-        // используем те же поля и геттеры/сеттеры
         private int id;
         private String name;
         private int quantity;
