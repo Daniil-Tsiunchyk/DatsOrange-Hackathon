@@ -66,7 +66,8 @@ public class OrangeTrader {
 
 
                 for (Map<String, Integer> bid : bids) {
-                    bid.get("price");
+                    Integer sellPrice = bid.get("price");
+                    Integer quantity = bid.get("quantity");
                 }
 
 //                for (int i = 0; i < buyPrices.size(); i++) {
