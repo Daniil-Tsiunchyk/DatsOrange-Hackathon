@@ -14,6 +14,8 @@ public class OrangeBuyerScript {
     public static final String TOKEN = "64f38d2665df964f38d2665dfd";
     public static final com.google.gson.Gson gson = new com.google.gson.Gson();
 
+    public static final long buyPrice = 100;
+
     public static void main(String[] args) {
         while (true) {
             System.out.println("Starting the OrangeBuyerScript.");
@@ -53,7 +55,7 @@ public class OrangeBuyerScript {
     }
 
     public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException {
-        if (price >= 100) {
+        if (price >= buyPrice) {
             System.out.println("Skipping assetId " + symbolId + " as price is " + price);
             return;
         }
@@ -142,7 +144,7 @@ public class OrangeBuyerScript {
         System.out.println("Received " + sellOrders.size() + " sell orders.");
 
         for (SellOrder order : sellOrders) {
-            if (order.getPrice() < 50) {
+            if (order.getPrice() < buyPrice) {
                 System.out.println("Attempting to place buy order for assetId " + order.getSymbolId());
                 placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
             } else {

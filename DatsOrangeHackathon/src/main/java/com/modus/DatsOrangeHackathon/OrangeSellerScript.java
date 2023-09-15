@@ -37,7 +37,7 @@ public class OrangeSellerScript {
                             if (asset.getId() == 73 || asset.getId() == 31) {
                                 placeSellOrder(asset.getId(), 1000, asset.getQuantity());
                             } else {
-                                placeSellOrder(asset.getId(), 500, asset.getQuantity());
+                                placeSellOrder(asset.getId(), 300, asset.getQuantity());
                             }
                         }
                     }
@@ -52,8 +52,8 @@ public class OrangeSellerScript {
     }
 
     public static void placeSellOrder(int assetId, int price, int quantity) throws IOException, InterruptedException {
-        if (quantity <= 0) {
-            System.out.println("Cannot place sell order for assetId " + assetId + ". Quantity should be greater than 0.");
+        if (quantity <= 0 || assetId == 1) {
+           // System.out.println("Cannot place sell order for assetId " + assetId + ". Quantity should be greater than 0.");
             return;
         }
 
