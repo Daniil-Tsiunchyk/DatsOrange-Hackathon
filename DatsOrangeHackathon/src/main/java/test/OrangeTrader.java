@@ -56,14 +56,7 @@ public class OrangeTrader {
 
     // получает все заявки на продажу и ищет лучшее предложение
     public void checkAndSell() {
-        String url = baseUrl + "/sellStock";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("token", token);
-
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-
-        ResponseEntity<Map[]> response =  restTemplate.exchange(url, HttpMethod.GET, entity, Map[].class);
+        ResponseEntity<Map[]> response =  checkSellStock();
 
         if (response.getStatusCode() == HttpStatus.OK) {
             for (Map stock : Objects.requireNonNull(response.getBody())) {
