@@ -36,7 +36,10 @@ public class OrangeSellerScript {
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
                             if (asset.getQuantity() > 0)
-                                placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
+                                if (asset.getId() == 76 || asset.getId() == 33) {
+                                    placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
+                                } else
+                                    placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
                         }
                     }
                 } catch (IOException e) {
@@ -80,14 +83,18 @@ public class OrangeSellerScript {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                System.out.println("Sell order placed successfully for assetId " + assetId);
+                System.out.println("Ордер на продажу успешно размещен.");
+                System.out.println("ID актива: " + assetId);
+                System.out.println("Цена за акцию: " + price);
+                System.out.println("Количество: " + quantity);
+                System.out.println("Общая сумма: " + (price * quantity));
             } else {
-                System.out.println("Failed to place sell order for assetId " + assetId);
-                System.out.println("Response code: " + response.code());
-                System.out.println("Response message: " + response.message());
-                if (response.body() != null) {
-                    System.out.println("Response body: " + response.body().string());
-                }
+                System.out.println("Не удалось разместить ордер на продажу для ID актива " + assetId);
+//                System.out.println("Код ответа: " + response.code());
+//                System.out.println("Сообщение ответа: " + response.message());
+//                if (response.body() != null) {
+//                    System.out.println("Тело ответа: " + response.body().string());
+//                }
             }
         }
 
