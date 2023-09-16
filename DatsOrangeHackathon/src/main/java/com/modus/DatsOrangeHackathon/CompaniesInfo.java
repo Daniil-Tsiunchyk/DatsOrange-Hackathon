@@ -8,6 +8,7 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static com.modus.DatsOrangeHackathon.Const.*;
 
@@ -108,22 +109,40 @@ public class CompaniesInfo {
         return companies;
     }
 
-    public static void main(String[] args) {
+    public static int getCompanyId(List<Company> allCompanies, String name) {
+        int id = 1;
+        for (Company company : allCompanies) {
+            if (company.ticker.equals(name))
+                id = company.id;
+        }
+        return id;
+    }
+
+    public static void main(String[] args) throws IOException {
         Timer newsTimer = new Timer();
         final News[] latestNews = {null};
 
         List<AffectedCompany> affectedCompanies = new ArrayList<>();
+        List<Company> companies = getAllCompanies();
 
         newsTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 News news = getLastNews();
-                if(!latestNews[0].equals(news)){
+                if (!latestNews[0].equals(news)) {
                     latestNews[0] = news;
 
+                    for (AffectedCompany aCompany : affectedCompanies) {
+                        for (String affectedCompany : latestNews[0].companiesAffected) {
+                            if (affectedCompanies.stream().noneMatch(aCompany1 -> aCompany1.name.equals(affectedCompany)))
+                                affectedCompanies.add(new AffectedCompany(getCompanyId(companies, affectedCompany), affectedCompany));
+                        }
+                        if (latestNews[0].companiesAffected.contains(aCompany.name))
+                            aCompany.changePriceFactor(latestNews[0].rate);
+                    }
                 }
             }
-        },0, 1000);
+        }, 0, 1000);
     }
 
 }
