@@ -36,10 +36,11 @@ public class OrangeBuyerScript {
             for (SellOrder order : sellOrders) {
                 if (order.getPrice() <= orderBuyPrice) {
 //                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
-                    if (!EXCLUDED_IDS.contains(order.getSymbolId())) {
-                        placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
-                    }
-                }   // System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
+                    // if (!EXCLUDED_IDS.contains(order.getSymbolId())) {
+                    placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
+                    //}
+                }
+//                 System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
             }
 
             try {
@@ -107,7 +108,7 @@ public class OrangeBuyerScript {
             System.out.println("Количество: " + quantity);
             System.out.println("Общая сумма: " + (price * quantity));
         } else {
-            System.out.println("Не удалось разместить ордер на покупку для assetId " + symbolId);
+//            System.out.println("Не удалось разместить ордер на покупку для assetId " + symbolId);
         }
 
         Thread.sleep(200);

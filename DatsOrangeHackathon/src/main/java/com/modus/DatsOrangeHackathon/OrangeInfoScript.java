@@ -69,7 +69,9 @@ public class OrangeInfoScript {
 
                     List<OrangeBuyerScript.SellOrder> sellOrders = getSellOrders();
                     sellOrders.sort(Comparator.comparingDouble(OrangeBuyerScript.SellOrder::getPrice));
-                    int below100 = 0;
+                    int below50 = 0;
+                    int between50below75 = 0;
+                    int between75below100 = 0;
                     int between100below125 = 0;
                     int between125below133 = 0;
                     int between133below150 = 0;
@@ -81,8 +83,12 @@ public class OrangeInfoScript {
 
                     for (OrangeBuyerScript.SellOrder order : sellOrders) {
                         int price = order.getPrice();
-                        if (price <= 100) {
-                            below100 += order.getQuantity();
+                        if (price <= 50) {
+                            below50 += order.getQuantity();
+                        } else if (price <= 75) {
+                            between50below75 += order.getQuantity();
+                        } else if (price <= 100) {
+                            between75below100 += order.getQuantity();
                         } else if (price <= 125) {
                             between100below125 += order.getQuantity();
                         } else if (price <= 133) {
@@ -103,8 +109,12 @@ public class OrangeInfoScript {
                     }
 
 //                    System.out.println("\n========== Информация о продажных ордерах ==========");
-                    if (below100 > 0)
-                        System.out.println("Количество акций с ценой до 100: " + below100);
+                    if (below50 > 0)
+                        System.out.println("Количество акций с ценой до 50: " + below50);
+                    if (between50below75 > 0)
+                        System.out.println("Количество акций с ценой от 50 до 75: " + between100below125);
+                    if (between75below100 > 0)
+                        System.out.println("Количество акций с ценой от 75 до 100: " + between100below125);
                     if (between100below125 > 0)
                         System.out.println("Количество акций с ценой от 100 до 125: " + between100below125);
                     if (between125below133 > 0)
