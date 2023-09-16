@@ -28,7 +28,7 @@ public class OrangeBuyerScript {
             for (SellOrder order : sellOrders) {
                 if (order.getPrice() <= orderBuyPrice) {
 //                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
-                    if (order.getSymbolId() != 356 && order.getSymbolId() != 76 && order.getSymbolId() != 452 && order.getSymbolId() != 38 && order.getSymbolId() != 286 && order.getSymbolId() != 279 && order.getSymbolId() != 262) {
+                    if (!EXCLUDED_IDS.contains(order.getSymbolId())) {
                         placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
                     }
                 }   // System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
