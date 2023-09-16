@@ -9,6 +9,8 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.modus.DatsOrangeHackathon.Const.*;
@@ -20,6 +22,7 @@ public class OrangeBuyerScript {
             System.out.println("Запуск скрипта OrangeBuyerScript.");
             List<SellOrder> sellOrders = getSellOrders();
             System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
+            sellOrders.sort(Comparator.comparingDouble(SellOrder::getPrice));
 
             for (SellOrder order : sellOrders) {
                 if (order.getPrice() <= orderBuyPrice) {

@@ -11,11 +11,6 @@ import static com.modus.DatsOrangeHackathon.Const.*;
 public class OrangeInfoScript {
     public static void main(String[] args) throws InterruptedException {
         while (true) {
-            try {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
-            }
             String json = getAccountInfoJson();
 
             AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
