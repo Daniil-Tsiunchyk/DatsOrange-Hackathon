@@ -35,9 +35,8 @@ public class OrangeSellerScript {
                     AccountInfo accountInfo = getAccountInfo();
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                            // Выставляем каждую акцию на продажу за 1000
-
-                            placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
+                            if (asset.getQuantity() > 0)
+                                placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
                         }
                     }
                 } catch (IOException e) {
@@ -67,11 +66,6 @@ public class OrangeSellerScript {
     }
 
     public static void placeSellOrder(int assetId, long price, int quantity) throws IOException, InterruptedException {
-        if (quantity <= 0) {
-            System.out.println("Cannot place sell order for assetId " + assetId + ". Quantity should be greater than 0.");
-            return;
-        }
-
         // Формирование тела запроса
         String jsonBody = gson.toJson(new SellOrderRequest(assetId, price, quantity));
 
@@ -118,42 +112,6 @@ public class OrangeSellerScript {
         return null;
     }
 
-
-    public static void seeOranges(AccountInfo accountInfo, Gson gson) {
-        if (accountInfo != null) {
-            System.out.println("\n=================== Account Info ===================");
-            System.out.println("Account ID: " + accountInfo.getAccount().getId());
-            System.out.println("Account Name: " + accountInfo.getAccount().getName());
-
-            System.out.println("\n------------------- Bids -------------------");
-            for (AccountInfo.Bid bid : accountInfo.getBids()) {
-                System.out.println("Bid ID: " + bid.getId());
-                System.out.println("  Symbol ID: " + bid.getSymbolId());
-                System.out.println("  Price: " + bid.getPrice());
-                System.out.println("  Type: " + bid.getType());
-                System.out.println("  Create Date: " + bid.getCreateDate());
-            }
-
-            System.out.println("\n------------------- Assets -------------------");
-            for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                System.out.println("Asset ID: " + asset.getId());
-                System.out.println("  Name: " + asset.getName());
-                System.out.println("  Quantity: " + asset.getQuantity());
-            }
-
-            System.out.println("\n------------------- Frozen Assets -------------------");
-            for (AccountInfo.FrozenAsset frozenAsset : accountInfo.getFrozenAssets()) {
-                System.out.println("Frozen Asset ID: " + frozenAsset.getId());
-                System.out.println("  Name: " + frozenAsset.getName());
-                System.out.println("  Quantity: " + frozenAsset.getQuantity());
-            }
-
-            System.out.println("\n====================================================");
-        }
-
-        String prettyJson = gson.toJson(accountInfo);
-        System.out.println(prettyJson);
-    }
 
     public static class SellOrderRequest {
         private int symbolId;
