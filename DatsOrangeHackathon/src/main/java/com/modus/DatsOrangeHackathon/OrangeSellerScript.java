@@ -83,7 +83,7 @@ public class OrangeSellerScript {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                System.out.println("Ордер на продажу успешно размещен.");
+                System.out.println("\nОрдер на продажу успешно размещен.");
                 System.out.println("ID актива: " + assetId);
                 System.out.println("Цена за акцию: " + price);
                 System.out.println("Количество: " + quantity);
