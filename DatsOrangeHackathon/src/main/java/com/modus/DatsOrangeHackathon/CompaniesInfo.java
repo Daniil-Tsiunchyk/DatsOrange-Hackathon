@@ -8,7 +8,6 @@ import okhttp3.Response;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Predicate;
 
 import static com.modus.DatsOrangeHackathon.Const.*;
 
@@ -78,12 +77,14 @@ public class CompaniesInfo {
                 String responseBody = response.body().string();
                 latestNews = gson.fromJson(responseBody, News.class);
             } else {
-                System.out.println("Не удалось получить ордеры на продажу. Код ответа: " + response.code());
+                System.out.println("Не удалось получить последнюю новость. Код ответа: " + response.code());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        if(latestNews==null)
+            latestNews=getLastNews();
         return latestNews;
     }
 
@@ -103,7 +104,7 @@ public class CompaniesInfo {
                 Company[] comps = gson.fromJson(responseBody, Company[].class);
                 companies.addAll(Arrays.asList(comps));
             } else {
-                System.out.println("Не удалось получить ордеры на продажу. Код ответа: " + response.code());
+                System.out.println("Не удалось компании. Код ответа: " + response.code());
             }
         }
         return companies;
@@ -120,7 +121,7 @@ public class CompaniesInfo {
 
     public static void main(String[] args) throws IOException {
         Timer newsTimer = new Timer();
-        final News[] latestNews = {null};
+        final News[] latestNews = {getLastNews()};
 
         List<AffectedCompany> affectedCompanies = new ArrayList<>();
         List<Company> companies = getAllCompanies();
@@ -143,6 +144,17 @@ public class CompaniesInfo {
                 }
             }
         }, 0, 1000);
-    }
 
+        System.out.println("Рейтинг компаний по акциям");
+        Timer outputTimer = new Timer();
+        outputTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                affectedCompanies.sort(Comparator.comparingDouble(o -> o.priceFactor));
+                for (AffectedCompany company : affectedCompanies) {
+                    System.out.println("Компания: " + company.id + ", множитель: " + company.priceFactor);
+                }
+            }
+        }, 0, 5000);
+    }
 }
