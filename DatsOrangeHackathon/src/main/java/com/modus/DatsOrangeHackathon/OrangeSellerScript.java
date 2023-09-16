@@ -38,7 +38,7 @@ public class OrangeSellerScript {
                     AccountInfo accountInfo = getAccountInfo();
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                            if (asset.getQuantity() > 0) {
+                            if (asset.getQuantity() > 0 && asset.getId() != 1) {
                                 if (EXCLUDED_IDS.contains(asset.getId())) {
                                     placeSellOrder(asset.getId(), worstAssetSellPrice, asset.getQuantity());
                                 } else {
