@@ -34,7 +34,7 @@ public class OrangeBuyerScript {
             }
 //            System.out.println("Скрипт OrangeBuyerScript завершён.");
             try {
-                Thread.sleep(100);  // Задержка в 1 секунду будет 1000
+                Thread.sleep(500);  // Задержка в 1 секунду будет 1000
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -96,7 +96,7 @@ public class OrangeBuyerScript {
             }
         }
 
-        Thread.sleep(1000);
+        Thread.sleep(200);
     }
 
     public static class BuyOrderRequest {
