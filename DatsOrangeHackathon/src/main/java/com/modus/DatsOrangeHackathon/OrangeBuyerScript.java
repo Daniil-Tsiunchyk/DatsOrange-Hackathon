@@ -13,16 +13,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.modus.DatsOrangeHackathon.Const.*;
 
 public class OrangeBuyerScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        AtomicInteger loopCounter = new AtomicInteger(0);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("Количество выполненных циклов: " + loopCounter.get())));
+
         System.out.println("Запуск скрипта OrangeBuyerScript.");
+
         while (true) {
+            loopCounter.incrementAndGet();
+
             List<SellOrder> sellOrders = getSellOrders();
-//            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
+            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
             sellOrders.sort(Comparator.comparingDouble(SellOrder::getPrice));
 
             for (SellOrder order : sellOrders) {
@@ -33,6 +41,7 @@ public class OrangeBuyerScript {
                     }
                 }   // System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
             }
+
             try {
                 Thread.sleep(500);  // Задержка в 1 секунду будет 1000
             } catch (InterruptedException e) {
@@ -72,7 +81,8 @@ public class OrangeBuyerScript {
         return sellOrders;
     }
 
-    public static void placeBuyOrder(int symbolId, int price, int quantity) throws InterruptedException, IOException {
+    public static void placeBuyOrder(int symbolId, int price, int quantity) throws
+            InterruptedException, IOException {
 
         String jsonBody = gson.toJson(new OrangeBuyerScript.BuyOrderRequest(symbolId, price, quantity));
 
