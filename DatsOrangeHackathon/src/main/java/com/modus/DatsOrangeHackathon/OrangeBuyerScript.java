@@ -119,7 +119,6 @@ public class OrangeBuyerScript {
         private int quantity;
     }
 
-
     @Getter
     @Setter
     public static class Bid {
