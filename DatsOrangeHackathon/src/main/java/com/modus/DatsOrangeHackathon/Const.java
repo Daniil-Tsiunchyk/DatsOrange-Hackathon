@@ -12,4 +12,5 @@ public class Const {
     static final Gson gson = new Gson();
     static final long orderSellPrice = 300;
     static final long orderBuyPrice = 100;
+    static final int buyLimit = 5000;
 }

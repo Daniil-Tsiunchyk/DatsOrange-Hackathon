@@ -17,12 +17,12 @@ public class OrangeInfoScript {
         while (true) {
             try {
                 String json = getAccountInfoJson();
-
+//
                 AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
-                if (accountInfo != null && accountInfo.getAccount() != null) {
-                    System.out.println("ID аккаунта: " + accountInfo.getAccount().getId());
-                    System.out.println("Команда: " + accountInfo.getAccount().getName());
-                }
+//                if (accountInfo != null && accountInfo.getAccount() != null) {
+//                    System.out.println("ID аккаунта: " + accountInfo.getAccount().getId());
+//                    System.out.println("Команда: " + accountInfo.getAccount().getName());
+//                }
                 if (accountInfo != null && accountInfo.getAccount() != null) {
 
                     int totalOrders = 0;
@@ -54,19 +54,19 @@ public class OrangeInfoScript {
                         totalFrozenAssets += frozenAsset.getQuantity();
                     }
 
-                    System.out.println("\n=================== Информация об аккаунте ===================");
-                    for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                        if ("Oranges".equalsIgnoreCase(asset.getName())) {
-                            System.out.println("  Текущее количество апельсинов: " + asset.getQuantity());
-                        }
-                    }
-                    System.out.println("Всего ордеров: " + totalOrders);
-                    System.out.println("Суммарная цена ордеров: " + totalPrice);
-                    System.out.println("Всего активов: " + totalAssets);
-                    System.out.println("Количество компаний с акциями > 0: " + totalCompaniesWithShares);
-                    System.out.println("Среднее количество активов на компанию: " + averageAssetsPerCompany);
-                    System.out.println("Всего замороженных активов: " + totalFrozenAssets);
-                    System.out.println("\n============================================================");
+//                    System.out.println("\n=================== Информация об аккаунте ===================");
+//                    for (AccountInfo.Asset asset : accountInfo.getAssets()) {
+//                        if ("Oranges".equalsIgnoreCase(asset.getName())) {
+//                            System.out.println("  Текущее количество апельсинов: " + asset.getQuantity());
+//                        }
+//                    }
+//                    System.out.println("Всего ордеров: " + totalOrders);
+//                    System.out.println("Суммарная цена ордеров: " + totalPrice);
+//                    System.out.println("Всего активов: " + totalAssets);
+//                    System.out.println("Количество компаний с акциями > 0: " + totalCompaniesWithShares);
+//                    System.out.println("Среднее количество активов на компанию: " + averageAssetsPerCompany);
+//                    System.out.println("Всего замороженных активов: " + totalFrozenAssets);
+//                    System.out.println("\n============================================================");
 
                     List<OrangeBuyerScript.SellOrder> sellOrders = getSellOrders();
                     sellOrders.sort(Comparator.comparingDouble(OrangeBuyerScript.SellOrder::getPrice));
@@ -103,7 +103,7 @@ public class OrangeInfoScript {
                         }
                     }
 
-                    System.out.println("\n========== Информация о продажных ордерах ==========");
+//                    System.out.println("\n========== Информация о продажных ордерах ==========");
                     if (below100 > 0)
                         System.out.println("Количество акций с ценой до 100: " + below100);
                     if (between100below125 > 0)
@@ -122,12 +122,12 @@ public class OrangeInfoScript {
                         System.out.println("Количество акций с ценой от 1000 до 2000: " + between1000and2000);
                     if (above2000 > 0)
                         System.out.println("Количество акций с ценой >= 2000: " + above2000);
-                    System.out.println("====================================================");
+                    System.out.println("\n");
 
 
                 }
             } catch (HttpClientErrorException.TooManyRequests e) {
-                System.out.println("Слишком много запросов. Подождем перед следующим запросом.");
+//                System.out.println("Слишком много запросов. Подождем перед следующим запросом.");
                 Thread.sleep(10000);  // подождать 10 секунд перед повторением
             } catch (Exception e) {
                 e.printStackTrace();  // другие исключения
