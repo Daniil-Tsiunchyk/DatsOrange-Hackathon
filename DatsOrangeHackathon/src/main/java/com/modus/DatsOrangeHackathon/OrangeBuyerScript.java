@@ -18,8 +18,8 @@ import static com.modus.DatsOrangeHackathon.Const.*;
 public class OrangeBuyerScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        System.out.println("Запуск скрипта OrangeBuyerScript.");
         while (true) {
-            System.out.println("Запуск скрипта OrangeBuyerScript.");
             List<SellOrder> sellOrders = getSellOrders();
             System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
             sellOrders.sort(Comparator.comparingDouble(SellOrder::getPrice));
@@ -29,10 +29,10 @@ public class OrangeBuyerScript {
                     System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
                     placeBuyOrder(order.getSymbolId(), order.getPrice(), order.getQuantity());
                 } else {
-                    System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
+//                    System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
                 }
             }
-            System.out.println("Скрипт OrangeBuyerScript завершён.");
+//            System.out.println("Скрипт OrangeBuyerScript завершён.");
             try {
                 Thread.sleep(100);  // Задержка в 1 секунду будет 1000
             } catch (InterruptedException e) {

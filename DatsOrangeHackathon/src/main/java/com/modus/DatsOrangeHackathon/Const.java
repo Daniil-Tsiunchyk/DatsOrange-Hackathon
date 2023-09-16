@@ -10,7 +10,7 @@ public class Const {
     static final RestTemplate restTemplate = new RestTemplate();
     static final String baseUrl = "https://datsorange.devteam.games";
     static final Gson gson = new Gson();
-    static final long orderSellPrice = 100;
-    static final long orderBuyPrice = 50;
+    static final long orderSellPrice = 500;
+    static final long orderBuyPrice = 100;
 
 }
