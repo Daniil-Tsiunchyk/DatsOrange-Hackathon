@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.modus.DatsOrangeHackathon.Const.orderSellPrice;
 
@@ -18,18 +19,24 @@ public class OrangeSellerScript {
     public static final Gson gson = new Gson();
 
     public static void main(String[] args) {
+        AtomicInteger loopCounter = new AtomicInteger(0);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Количество выполненных циклов: " + loopCounter.get());
+        }));
+
         String json = getAccountInfoJson();
 
         Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
         displayOrangesQuantity(accountInfo);
-//        seeOranges(accountInfo, gson);
-
+        // seeOranges(accountInfo, gson);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                loopCounter.incrementAndGet(); // Увеличиваем счётчик на 1
                 try {
                     // Получить информацию об акциях
                     AccountInfo accountInfo = getAccountInfo();
@@ -49,8 +56,8 @@ public class OrangeSellerScript {
                 }
             }
         }, 0, 60000);  // Запустить каждую минуту
-
     }
+
 
     public static String getAccountInfoJson() {
         String url = baseUrl + "/info";
@@ -99,7 +106,7 @@ public class OrangeSellerScript {
         }
 
         // Задержка в 1 секунду перед следующей операцией
-        Thread.sleep(1000);
+        Thread.sleep(100);
     }
 
 
