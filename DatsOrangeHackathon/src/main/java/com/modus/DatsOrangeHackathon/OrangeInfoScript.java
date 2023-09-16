@@ -150,19 +150,4 @@ public class OrangeInfoScript {
         }
     }
 
-    public static AccountInfo getAccountInfo() throws IOException {
-        Request request = new Request.Builder()
-                .url(baseUrl + "/info")
-                .addHeader("TOKEN", TOKEN)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                assert response.body() != null;
-                String jsonData = response.body().string();
-                return gson.fromJson(jsonData, AccountInfo.class);
-            }
-        }
-        return null;
-    }
 }

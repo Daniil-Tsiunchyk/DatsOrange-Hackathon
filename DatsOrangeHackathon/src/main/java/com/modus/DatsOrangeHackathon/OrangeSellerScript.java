@@ -11,12 +11,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.modus.DatsOrangeHackathon.Const.orderSellPrice;
+import static com.modus.DatsOrangeHackathon.Const.*;
 
 public class OrangeSellerScript {
-    public static final String TOKEN = "64f38d2665df964f38d2665dfd";
-    public static final OkHttpClient client = new OkHttpClient();
-    public static final Gson gson = new Gson();
 
     public static void main(String[] args) {
         AtomicInteger loopCounter = new AtomicInteger(0);
@@ -36,17 +33,18 @@ public class OrangeSellerScript {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                loopCounter.incrementAndGet(); // Увеличиваем счётчик на 1
+                loopCounter.incrementAndGet();
                 try {
-                    // Получить информацию об акциях
                     AccountInfo accountInfo = getAccountInfo();
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                            if (asset.getQuantity() > 0)
-                                if (asset.getId() == 76 || asset.getId() == 33) {
+                            if (asset.getQuantity() > 0) {
+                                if (EXCLUDED_IDS.contains(asset.getId())) {
+                                    placeSellOrder(asset.getId(), worstAssetSellPrice, asset.getQuantity());
+                                } else {
                                     placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
-                                } else
-                                    placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
+                                }
+                            }
                         }
                     }
                 } catch (IOException e) {
@@ -55,7 +53,7 @@ public class OrangeSellerScript {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 60000);  // Запустить каждую минуту
+        }, 0, 1000);  // Запустить каждую секунду
     }
 
 
