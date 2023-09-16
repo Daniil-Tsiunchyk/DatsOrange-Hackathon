@@ -104,15 +104,24 @@ public class OrangeInfoScript {
                     }
 
                     System.out.println("\n========== Информация о продажных ордерах ==========");
-                    System.out.println("Количество акций с ценой до 100: " + below100);
-                    System.out.println("Количество акций с ценой от 100 до 125: " + between100below125);
-                    System.out.println("Количество акций с ценой от 125 до 133: " + between125below133);
-                    System.out.println("Количество акций с ценой от 133 до 150: " + between133below150);
-                    System.out.println("Количество акций с ценой от 150 до 200: " + between150below200);
-                    System.out.println("Количество акций с ценой от 200 до 500: " + between200below500);
-                    System.out.println("Количество акций с ценой от 500 до 1000: " + between500below1000);
-                    System.out.println("Количество акций с ценой от 1000 до 2000: " + between1000and2000);
-                    System.out.println("Количество акций с ценой >= 2000: " + above2000);
+                    if (below100 > 0)
+                        System.out.println("Количество акций с ценой до 100: " + below100);
+                    if (between100below125 > 0)
+                        System.out.println("Количество акций с ценой от 100 до 125: " + between100below125);
+                    if (between125below133 > 0)
+                        System.out.println("Количество акций с ценой от 125 до 133: " + between125below133);
+                    if (between133below150 > 0)
+                        System.out.println("Количество акций с ценой от 133 до 150: " + between133below150);
+                    if (between150below200 > 0)
+                        System.out.println("Количество акций с ценой от 150 до 200: " + between150below200);
+                    if (between200below500 > 0)
+                        System.out.println("Количество акций с ценой от 200 до 500: " + between200below500);
+                    if (between500below1000 > 0)
+                        System.out.println("Количество акций с ценой от 500 до 1000: " + between500below1000);
+                    if (between1000and2000 > 0)
+                        System.out.println("Количество акций с ценой от 1000 до 2000: " + between1000and2000);
+                    if (above2000 > 0)
+                        System.out.println("Количество акций с ценой >= 2000: " + above2000);
                     System.out.println("====================================================");
 
 
