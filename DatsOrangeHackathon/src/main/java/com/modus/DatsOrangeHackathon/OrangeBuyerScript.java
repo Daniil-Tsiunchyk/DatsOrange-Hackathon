@@ -8,6 +8,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -20,7 +22,7 @@ public class OrangeBuyerScript {
         System.out.println("Запуск скрипта OrangeBuyerScript.");
         while (true) {
             List<SellOrder> sellOrders = getSellOrders();
-            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
+//            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
             sellOrders.sort(Comparator.comparingDouble(SellOrder::getPrice));
 
             for (SellOrder order : sellOrders) {
@@ -85,18 +87,23 @@ public class OrangeBuyerScript {
 
         Response response = client.newCall(request).execute();
         if (response.isSuccessful()) {
-            System.out.println("Ордер на покупку успешно размещен для assetId " + symbolId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+            String formattedNow = now.format(formatter);
+
+            System.out.println("Время покупки: " + formattedNow);
+            System.out.println("Ордер на покупку успешно размещен.");
+            System.out.println("Asset ID: " + symbolId);
+            System.out.println("Цена за акцию: " + price);
+            System.out.println("Количество: " + quantity);
+            System.out.println("Общая сумма: " + (price * quantity));
         } else {
             System.out.println("Не удалось разместить ордер на покупку для assetId " + symbolId);
-            System.out.println("Код ответа: " + response.code());
-            System.out.println("Сообщение ответа: " + response.message());
-            if (response.body() != null) {
-                System.out.println("Тело ответа: " + response.body().string());
-            }
         }
 
         Thread.sleep(200);
     }
+
 
     public static class BuyOrderRequest {
         int symbolId;

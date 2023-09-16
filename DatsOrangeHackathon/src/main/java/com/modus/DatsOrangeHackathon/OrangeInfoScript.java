@@ -24,7 +24,6 @@ public class OrangeInfoScript {
 //                    System.out.println("Команда: " + accountInfo.getAccount().getName());
 //                }
                 if (accountInfo != null && accountInfo.getAccount() != null) {
-
                     int totalOrders = 0;
                     double totalPrice = 0;
                     int totalAssets = 0;
