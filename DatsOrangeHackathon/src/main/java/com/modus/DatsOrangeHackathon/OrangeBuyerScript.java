@@ -27,7 +27,7 @@ public class OrangeBuyerScript {
 
             for (SellOrder order : sellOrders) {
                 if (order.getPrice() <= orderBuyPrice) {
-                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
+//                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
                     placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
                 }  // System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
             }
