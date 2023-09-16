@@ -7,9 +7,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static com.modus.DatsOrangeHackathon.Const.*;
 
@@ -26,6 +24,19 @@ public class CompaniesInfo {
         private int rate;
         @SerializedName("companiesAffected")
         private List<String> companiesAffected;
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            News news = (News) o;
+            return Objects.equals(date, news.date);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(date);
+        }
     }
 
     @Getter
@@ -53,7 +64,7 @@ public class CompaniesInfo {
         }
     }
 
-    public News getLastNews() {
+    public static News getLastNews() {
         News latestNews = null;
         Request request = new Request.Builder()
                 .url(baseUrl + "/LatestNews")
@@ -98,7 +109,21 @@ public class CompaniesInfo {
     }
 
     public static void main(String[] args) {
+        Timer newsTimer = new Timer();
+        final News[] latestNews = {null};
 
+        List<AffectedCompany> affectedCompanies = new ArrayList<>();
+
+        newsTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                News news = getLastNews();
+                if(!latestNews[0].equals(news)){
+                    latestNews[0] = news;
+
+                }
+            }
+        },0, 1000);
     }
 
 }

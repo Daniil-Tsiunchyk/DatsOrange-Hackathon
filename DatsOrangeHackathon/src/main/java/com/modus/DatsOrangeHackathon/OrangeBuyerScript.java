@@ -27,11 +27,8 @@ public class OrangeBuyerScript {
                 if (order.getPrice() <= orderBuyPrice) {
                     System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
                     placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
-                } else {
-//                    System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
-                }
+                }  // System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
             }
-//            System.out.println("Скрипт OrangeBuyerScript завершён.");
             try {
                 Thread.sleep(500);  // Задержка в 1 секунду будет 1000
             } catch (InterruptedException e) {
