@@ -9,25 +9,21 @@ import java.util.List;
 @Getter
 @Setter
 public class AccountInfo {
-    // Поле для хранения информации о счете
     private Account account;
-    // Поле для хранения списка ставок
-    private List<Bid> bids;
-    // Поле для хранения списка активов
-    private List<Asset> assets;
-    // Поле для хранения списка замороженных активов
-    private List<FrozenAsset> frozenAssets;
+    private List<Bid> bids; // Ставки
+    private List<Asset> assets; //Активы
+    private List<FrozenAsset> frozenAssets; // Замороженные активы
 
-
-    // Наш счёт
-    @Setter
     @Getter
+    @Setter
     public static class Account {
+        @SerializedName("id")
         private int id;
+
+        @SerializedName("name")
         private String name;
     }
 
-    // Ставки
     @Getter
     @Setter
     public static class Bid {
@@ -44,7 +40,6 @@ public class AccountInfo {
 
     }
 
-    //Активы
     @Getter
     @Setter
     public static class Asset {
@@ -54,7 +49,6 @@ public class AccountInfo {
 
     }
 
-    // Замороженные активы
     @Getter
     @Setter
     public static class FrozenAsset {

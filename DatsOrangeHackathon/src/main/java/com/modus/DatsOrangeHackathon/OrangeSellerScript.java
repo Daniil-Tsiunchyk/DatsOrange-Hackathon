@@ -1,44 +1,28 @@
 package com.modus.DatsOrangeHackathon;
 
-import com.google.gson.Gson;
 import okhttp3.*;
 import okhttp3.MediaType;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.modus.DatsOrangeHackathon.Const.*;
+
 public class OrangeSellerScript {
-    public static final String TOKEN = "64f38d2665df964f38d2665dfd";
-    public static final OkHttpClient client = new OkHttpClient();
-    public static final Gson gson = new Gson();
 
     public static void main(String[] args) {
-        String json = getAccountInfoJson();
-
-        Gson gson = new Gson();
-        AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
-        displayOrangesQuantity(accountInfo);
-//        seeOranges(accountInfo, gson);
-
-
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 try {
-                    // Получить информацию об акциях
-                    AccountInfo accountInfo = getAccountInfo();
+                    // Получить информацию об активах
+                    AccountInfo accountInfo = OrangeInfoScript.getAccountInfo();
                     if (accountInfo != null && accountInfo.getAssets() != null) {
                         for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                            // Выставляем каждую акцию на продажу за 1000
-                            if (asset.getId() == 73 || asset.getId() == 31) {
-                                placeSellOrder(asset.getId(), 1000, asset.getQuantity());
-                            } else {
-                                placeSellOrder(asset.getId(), 300, asset.getQuantity());
-                            }
+                            if (asset.getQuantity() != 0)
+                                placeSellOrder(asset.getId(), orderSellPrice, asset.getQuantity());
                         }
                     }
                 } catch (IOException e) {
@@ -47,29 +31,14 @@ public class OrangeSellerScript {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 60000);  // Запустить каждую минуту
+        }, 0, 100);  // Минута - 1000
 
     }
 
-    public static String getAccountInfoJson() {
-        String url = baseUrl + "/info";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("token", token);
 
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody();
-        } else {
-            return null;
-        }
-    }
-
-    public static void placeSellOrder(int assetId, int price, int quantity) throws IOException, InterruptedException {
-        if (quantity <= 0 || assetId == 1) {
-           // System.out.println("Cannot place sell order for assetId " + assetId + ". Quantity should be greater than 0.");
+    public static void placeSellOrder(int assetId, long price, int quantity) throws IOException, InterruptedException {
+        if (quantity <= 0) {
+            System.out.println("Невозможно разместить ордер на продажу для assetId " + assetId + ". Количество должно быть больше 0.");
             return;
         }
 
@@ -80,20 +49,20 @@ public class OrangeSellerScript {
                 MediaType.parse("application/json"), jsonBody);
 
         Request request = new Request.Builder()
-                .url("https://datsorange.devteam.games/LimitPriceSell")
+                .url(baseUrl + "/LimitPriceSell")
                 .addHeader("token", TOKEN)
                 .post(body)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                System.out.println("Sell order placed successfully for assetId " + assetId);
+                System.out.println("Ордер на продажу успешно размещен для assetId " + assetId);
             } else {
-                System.out.println("Failed to place sell order for assetId " + assetId);
-                System.out.println("Response code: " + response.code());
-                System.out.println("Response message: " + response.message());
+                System.out.println("Не удалось разместить ордер на продажу для assetId " + assetId);
+                System.out.println("Код ответа: " + response.code());
+                System.out.println("Сообщение ответа: " + response.message());
                 if (response.body() != null) {
-                    System.out.println("Response body: " + response.body().string());
+                    System.out.println("Тело ответа: " + response.body().string());
                 }
             }
         }
@@ -103,87 +72,8 @@ public class OrangeSellerScript {
     }
 
 
-    public static AccountInfo getAccountInfo() throws IOException {
-        Request request = new Request.Builder()
-                .url("https://datsorange.devteam.games/info")
-                .addHeader("TOKEN", TOKEN)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            if (response.isSuccessful()) {
-                assert response.body() != null;
-                String jsonData = response.body().string();
-                return gson.fromJson(jsonData, AccountInfo.class);
-            }
-        }
-        return null;
-    }
-
-
-    public static void seeOranges(AccountInfo accountInfo, Gson gson) {
-        if (accountInfo != null) {
-            System.out.println("\n=================== Account Info ===================");
-            System.out.println("Account ID: " + accountInfo.getAccount().getId());
-            System.out.println("Account Name: " + accountInfo.getAccount().getName());
-
-            System.out.println("\n------------------- Bids -------------------");
-            for (AccountInfo.Bid bid : accountInfo.getBids()) {
-                System.out.println("Bid ID: " + bid.getId());
-                System.out.println("  Symbol ID: " + bid.getSymbolId());
-                System.out.println("  Price: " + bid.getPrice());
-                System.out.println("  Type: " + bid.getType());
-                System.out.println("  Create Date: " + bid.getCreateDate());
-            }
-
-            System.out.println("\n------------------- Assets -------------------");
-            for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                System.out.println("Asset ID: " + asset.getId());
-                System.out.println("  Name: " + asset.getName());
-                System.out.println("  Quantity: " + asset.getQuantity());
-            }
-
-            System.out.println("\n------------------- Frozen Assets -------------------");
-            for (AccountInfo.FrozenAsset frozenAsset : accountInfo.getFrozenAssets()) {
-                System.out.println("Frozen Asset ID: " + frozenAsset.getId());
-                System.out.println("  Name: " + frozenAsset.getName());
-                System.out.println("  Quantity: " + frozenAsset.getQuantity());
-            }
-
-            System.out.println("\n====================================================");
-        }
-
-        String prettyJson = gson.toJson(accountInfo);
-        System.out.println(prettyJson);
-    }
-
     public static class SellOrderRequest {
-        private int symbolId;
-        private int price;
-        private int quantity;
-
-        public SellOrderRequest(int symbolId, int price, int quantity) {
-            this.symbolId = symbolId;
-            this.price = price;
-            this.quantity = quantity;
+        public SellOrderRequest(int symbolId, long price, int quantity) {
         }
     }
-
-    private static final String token = "64f38d2665df964f38d2665dfd";
-    private static final RestTemplate restTemplate = new RestTemplate();
-    private static final String baseUrl = "https://datsorange.devteam.games";
-
-    public static void displayOrangesQuantity(AccountInfo accountInfo) {
-        if (accountInfo != null && accountInfo.getAssets() != null) {
-            for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-                if ("Oranges".equalsIgnoreCase(asset.getName())) {
-                    System.out.println("Asset ID: " + asset.getId());
-                    System.out.println("  Name: " + asset.getName());
-                    System.out.println("  Quantity: " + asset.getQuantity());
-                    return;
-                }
-            }
-        }
-        System.out.println("Oranges asset not found.");
-    }
-
 }
