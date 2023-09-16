@@ -30,7 +30,9 @@ public class OrangeBuyerScript {
             loopCounter.incrementAndGet();
 
             List<SellOrder> sellOrders = getSellOrders();
-//            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
+
+            //System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
+
             sellOrders.sort(Comparator.comparingDouble(SellOrder::getPrice));
 
             for (SellOrder order : sellOrders) {
