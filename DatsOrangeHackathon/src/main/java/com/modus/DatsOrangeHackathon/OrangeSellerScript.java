@@ -18,9 +18,7 @@ public class OrangeSellerScript {
     public static void main(String[] args) {
         AtomicInteger loopCounter = new AtomicInteger(0);
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Количество выполненных циклов: " + loopCounter.get());
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("Количество выполненных циклов: " + loopCounter.get())));
 
         String json = getAccountInfoJson();
 
@@ -53,7 +51,7 @@ public class OrangeSellerScript {
                     throw new RuntimeException(e);
                 }
             }
-        }, 0, 1000);  // Запустить каждую секунду
+        }, 0, 100);  // Запустить каждую секунду
     }
 
 
@@ -126,14 +124,8 @@ public class OrangeSellerScript {
 
 
     public static class SellOrderRequest {
-        private int symbolId;
-        private long price;
-        private int quantity;
 
         public SellOrderRequest(int symbolId, long price, int quantity) {
-            this.symbolId = symbolId;
-            this.price = price;
-            this.quantity = quantity;
         }
     }
 

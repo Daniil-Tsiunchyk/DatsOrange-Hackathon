@@ -19,10 +19,10 @@ public class OrangeInfoScript {
                 String json = getAccountInfoJson();
 //
                 AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
-//                if (accountInfo != null && accountInfo.getAccount() != null) {
-//                    System.out.println("ID аккаунта: " + accountInfo.getAccount().getId());
-//                    System.out.println("Команда: " + accountInfo.getAccount().getName());
-//                }
+                if (accountInfo != null && accountInfo.getAccount() != null) {
+                    System.out.println("ID аккаунта: " + accountInfo.getAccount().getId());
+                    System.out.println("Команда: " + accountInfo.getAccount().getName());
+                }
                 if (accountInfo != null && accountInfo.getAccount() != null) {
                     int totalOrders = 0;
                     double totalPrice = 0;
@@ -53,23 +53,26 @@ public class OrangeInfoScript {
                         totalFrozenAssets += frozenAsset.getQuantity();
                     }
 
-//                    System.out.println("\n=================== Информация об аккаунте ===================");
-//                    for (AccountInfo.Asset asset : accountInfo.getAssets()) {
-//                        if ("Oranges".equalsIgnoreCase(asset.getName())) {
-//                            System.out.println("  Текущее количество апельсинов: " + asset.getQuantity());
-//                        }
-//                    }
-//                    System.out.println("Всего ордеров: " + totalOrders);
-//                    System.out.println("Суммарная цена ордеров: " + totalPrice);
-//                    System.out.println("Всего активов: " + totalAssets);
-//                    System.out.println("Количество компаний с акциями > 0: " + totalCompaniesWithShares);
-//                    System.out.println("Среднее количество активов на компанию: " + averageAssetsPerCompany);
-//                    System.out.println("Всего замороженных активов: " + totalFrozenAssets);
-//                    System.out.println("\n============================================================");
+                    System.out.println("\n=================== Информация об аккаунте ===================");
+                    for (AccountInfo.Asset asset : accountInfo.getAssets()) {
+                        if ("Oranges".equalsIgnoreCase(asset.getName())) {
+                            System.out.println("  Текущее количество апельсинов: " + asset.getQuantity());
+                        }
+                    }
+                    System.out.println("Всего ордеров: " + totalOrders);
+                    System.out.println("Суммарная цена ордеров: " + totalPrice);
+                    System.out.println("Всего активов: " + totalAssets);
+                    System.out.println("Количество компаний с акциями > 0: " + totalCompaniesWithShares);
+                    System.out.println("Среднее количество активов на компанию: " + averageAssetsPerCompany);
+                    System.out.println("Всего замороженных активов: " + totalFrozenAssets);
+                    System.out.println("\n============================================================");
 
                     List<OrangeBuyerScript.SellOrder> sellOrders = getSellOrders();
                     sellOrders.sort(Comparator.comparingDouble(OrangeBuyerScript.SellOrder::getPrice));
-                    int below50 = 0;
+                    int below20 = 0;
+                    int between20below30 = 0;
+                    int between30below40 = 0;
+                    int between40below50 = 0;
                     int between50below75 = 0;
                     int between75below100 = 0;
                     int between100below125 = 0;
@@ -83,8 +86,14 @@ public class OrangeInfoScript {
 
                     for (OrangeBuyerScript.SellOrder order : sellOrders) {
                         int price = order.getPrice();
-                        if (price <= 50) {
-                            below50 += order.getQuantity();
+                        if (price <= 20) {
+                            below20 += order.getQuantity();
+                        } else if (price <= 30) {
+                            between20below30 += order.getQuantity();
+                        } else if (price <= 40) {
+                            between30below40 += order.getQuantity();
+                        } else if (price <= 50) {
+                            between40below50 += order.getQuantity();
                         } else if (price <= 75) {
                             between50below75 += order.getQuantity();
                         } else if (price <= 100) {
@@ -109,8 +118,14 @@ public class OrangeInfoScript {
                     }
 
 //                    System.out.println("\n========== Информация о продажных ордерах ==========");
-                    if (below50 > 0)
-                        System.out.println("Количество акций с ценой до 50: " + below50);
+                    if (below20 > 0)
+                        System.out.println("Количество акций с ценой до 20: " + below20);
+                    if (between20below30 > 0)
+                        System.out.println("Количество акций с ценой от 20 до 30: " + between20below30);
+                    if (between30below40 > 0)
+                        System.out.println("Количество акций с ценой от 30 до 40: " + between30below40);
+                    if (between40below50 > 0)
+                        System.out.println("Количество акций с ценой от 40 до 50: " + between40below50);
                     if (between50below75 > 0)
                         System.out.println("Количество акций с ценой от 50 до 75: " + between100below125);
                     if (between75below100 > 0)

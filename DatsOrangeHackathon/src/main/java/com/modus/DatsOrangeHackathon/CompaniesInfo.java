@@ -48,6 +48,8 @@ public class CompaniesInfo {
         private String ticker;
     }
 
+    @Getter
+    @Setter
     public static class AffectedCompany {
         private final int id;
         private final String name;
@@ -80,11 +82,9 @@ public class CompaniesInfo {
                 System.out.println("Не удалось получить последнюю новость. Код ответа: " + response.code());
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Ошибка при выполнении HTTP-запроса: " + e.getMessage());
         }
 
-        if(latestNews==null)
-            latestNews=getLastNews();
         return latestNews;
     }
 
@@ -121,7 +121,9 @@ public class CompaniesInfo {
 
     public static void main(String[] args) throws IOException {
         Timer newsTimer = new Timer();
-        final News[] latestNews = {getLastNews()};
+        News initialNews = new News();
+        initialNews.setDate("0000-00-00T00:00:00Z");
+        final News[] latestNews = {initialNews};
 
         List<AffectedCompany> affectedCompanies = new ArrayList<>();
         List<Company> companies = getAllCompanies();
@@ -130,7 +132,12 @@ public class CompaniesInfo {
             @Override
             public void run() {
                 News news = getLastNews();
-                if (!latestNews[0].equals(news)) {
+                if (news == null) {
+                    System.out.println("Не удалось получить последнюю новость.");
+                    return;
+                }
+
+                if (latestNews[0] == null || !latestNews[0].equals(news)) {
                     latestNews[0] = news;
 
                     for (AffectedCompany aCompany : affectedCompanies) {
