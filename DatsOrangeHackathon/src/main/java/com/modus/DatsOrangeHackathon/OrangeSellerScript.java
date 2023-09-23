@@ -3,8 +3,6 @@ package com.modus.DatsOrangeHackathon;
 import com.google.gson.Gson;
 import okhttp3.*;
 import okhttp3.MediaType;
-import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -12,6 +10,7 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.modus.DatsOrangeHackathon.Const.*;
+import static com.modus.DatsOrangeHackathon.OrangeInfoScript.getAccountInfoJson;
 
 public class OrangeSellerScript {
 
@@ -25,7 +24,6 @@ public class OrangeSellerScript {
         Gson gson = new Gson();
         AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
         displayOrangesQuantity(accountInfo);
-        // seeOranges(accountInfo, gson);
 
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
@@ -55,22 +53,6 @@ public class OrangeSellerScript {
     }
 
 
-    public static String getAccountInfoJson() {
-        String url = baseUrl + "/info";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("token", token);
-
-        HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
-
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return response.getBody();
-        } else {
-            return null;
-        }
-    }
-
     public static void placeSellOrder(int assetId, long price, int quantity) throws IOException, InterruptedException {
         // Формирование тела запроса
         String jsonBody = gson.toJson(new SellOrderRequest(assetId, price, quantity));
@@ -93,11 +75,11 @@ public class OrangeSellerScript {
                 System.out.println("Общая сумма: " + (price * quantity));
             } else {
                 System.out.println("Не удалось разместить ордер на продажу для ID актива " + assetId);
-//                System.out.println("Код ответа: " + response.code());
-//                System.out.println("Сообщение ответа: " + response.message());
-//                if (response.body() != null) {
-//                    System.out.println("Тело ответа: " + response.body().string());
-//                }
+                System.out.println("Код ответа: " + response.code());
+                System.out.println("Сообщение ответа: " + response.message());
+                if (response.body() != null) {
+                    System.out.println("Тело ответа: " + response.body().string());
+                }
             }
         }
 
@@ -128,10 +110,6 @@ public class OrangeSellerScript {
         public SellOrderRequest(int symbolId, long price, int quantity) {
         }
     }
-
-    private static final String token = "64f38d2665df964f38d2665dfd";
-    private static final RestTemplate restTemplate = new RestTemplate();
-    private static final String baseUrl = "https://datsorange.devteam.games";
 
     public static void displayOrangesQuantity(AccountInfo accountInfo) {
         if (accountInfo != null && accountInfo.getAssets() != null) {

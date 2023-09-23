@@ -68,11 +68,7 @@ public class CompaniesInfo {
 
     public static News getLastNews() {
         News latestNews = null;
-        Request request = new Request.Builder()
-                .url(baseUrl + "/LatestNews")
-                .addHeader("token", TOKEN)
-                .get()
-                .build();
+        Request request = new Request.Builder().url(baseUrl + "/LatestNews").addHeader("token", TOKEN).get().build();
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 assert response.body() != null;
@@ -91,11 +87,7 @@ public class CompaniesInfo {
     public static List<Company> getAllCompanies() throws IOException {
         List<Company> companies = new ArrayList<>();
 
-        Request request = new Request.Builder()
-                .url(baseUrl + "/getSymbols")
-                .addHeader("token", TOKEN)
-                .get()
-                .build();
+        Request request = new Request.Builder().url(baseUrl + "/getSymbols").addHeader("token", TOKEN).get().build();
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
@@ -113,8 +105,7 @@ public class CompaniesInfo {
     public static int getCompanyId(List<Company> allCompanies, String name) {
         int id = 1;
         for (Company company : allCompanies) {
-            if (company.ticker.equals(name))
-                id = company.id;
+            if (company.ticker.equals(name)) id = company.id;
         }
         return id;
     }

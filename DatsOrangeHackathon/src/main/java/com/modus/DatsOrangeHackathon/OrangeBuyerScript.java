@@ -30,17 +30,17 @@ public class OrangeBuyerScript {
             loopCounter.incrementAndGet();
 
             List<SellOrder> sellOrders = getSellOrders();
-//            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
+            System.out.println("Получено " + sellOrders.size() + " ордеров на продажу.");
             sellOrders.sort(Comparator.comparingDouble(SellOrder::getPrice));
 
             for (SellOrder order : sellOrders) {
                 if (order.getPrice() <= orderBuyPrice) {
-//                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
-                    // if (!EXCLUDED_IDS.contains(order.getSymbolId())) {
-                    placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
-                    //}
+                    System.out.println("Пытаюсь разместить ордер на покупку для assetId " + order.getSymbolId() + " по цене " + orderBuyPrice);
+                    if (!EXCLUDED_IDS.contains(order.getSymbolId())) {
+                        placeBuyOrder(order.getSymbolId(), order.getPrice(), Math.min(order.getQuantity(), buyLimit));
+                    }
                 }
-//                 System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
+                System.out.println("Пропускаю assetId " + order.getSymbolId() + ", так как цена " + order.getPrice() + " выше чем " + orderBuyPrice);
             }
 
             try {
@@ -75,7 +75,7 @@ public class OrangeBuyerScript {
                     }
                 }
             } else {
-//                System.out.println("Не удалось получить ордеры на продажу. Код ответа: " + response.code());
+                System.out.println("Не удалось получить ордеры на продажу. Код ответа: " + response.code());
             }
         }
 
@@ -108,7 +108,7 @@ public class OrangeBuyerScript {
             System.out.println("Количество: " + quantity);
             System.out.println("Общая сумма: " + (price * quantity));
         } else {
-//            System.out.println("Не удалось разместить ордер на покупку для assetId " + symbolId);
+            System.out.println("Не удалось разместить ордер на покупку для assetId " + symbolId);
         }
 
         Thread.sleep(200);

@@ -1,11 +1,8 @@
 package com.modus.DatsOrangeHackathon;
 
-import okhttp3.Request;
-import okhttp3.Response;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
@@ -13,11 +10,11 @@ import static com.modus.DatsOrangeHackathon.Const.*;
 import static com.modus.DatsOrangeHackathon.OrangeBuyerScript.getSellOrders;
 
 public class OrangeInfoScript {
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException {
         while (true) {
             try {
                 String json = getAccountInfoJson();
-//
+
                 AccountInfo accountInfo = gson.fromJson(json, AccountInfo.class);
                 if (accountInfo != null && accountInfo.getAccount() != null) {
                     System.out.println("ID аккаунта: " + accountInfo.getAccount().getId());
@@ -117,7 +114,7 @@ public class OrangeInfoScript {
                         }
                     }
 
-//                    System.out.println("\n========== Информация о продажных ордерах ==========");
+                    System.out.println("\n========== Информация о продажных ордерах ==========");
                     if (below20 > 0)
                         System.out.println("Количество акций с ценой до 20: " + below20);
                     if (between20below30 > 0)
@@ -151,10 +148,10 @@ public class OrangeInfoScript {
 
                 }
             } catch (HttpClientErrorException.TooManyRequests e) {
-//                System.out.println("Слишком много запросов. Подождем перед следующим запросом.");
-                Thread.sleep(10000);  // подождать 10 секунд перед повторением
+                System.out.println("Слишком много запросов. Подождем перед следующим запросом.");
+                Thread.sleep(10000);
             } catch (Exception e) {
-                e.printStackTrace();  // другие исключения
+                e.printStackTrace();
             }
         }
     }

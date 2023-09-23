@@ -13,9 +13,9 @@ public class Const {
     static final RestTemplate restTemplate = new RestTemplate();
     static final String baseUrl = "https://datsorange.devteam.games";
     static final Gson gson = new Gson();
-    static final long orderSellPrice = 65;
-    static final long orderBuyPrice = 15;
-    static final int buyLimit = 100;
-    static final List<Integer> EXCLUDED_IDS = Arrays.asList(200010, 200050);
-    static final int worstAssetSellPrice = 60;
+    static final long orderSellPrice = 10; //цена продажи
+    static final long orderBuyPrice = 1; //цена покупки
+    static final int buyLimit = 100; //лимит однократной покупки
+    static final List<Integer> EXCLUDED_IDS = Arrays.asList(100, 150, 200);//id мусорных компаний
+    static final int worstAssetSellPrice = 60; //цена продажи мусорных компаний
 }
